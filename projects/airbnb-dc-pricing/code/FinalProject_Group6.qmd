@@ -1,0 +1,606 @@
+---
+title: "Final Project. Airbnb Listings in Washington, DC"
+subtitle: "OPAN 6601 Statistics for Business Analytics and OPAN 6606 Programming I"
+author: "Kate Smith, Finley Mynott, Pedro Sanchez, Riya Pradhan, Siho Lee"
+format:
+  html:
+    embed-resources: true
+---
+
+This document has every step of the analysis, from loading the data to producing the numbers, tables and figures used in the written report. The question numbers follow the Final Project Guidelines (Q1 to Q9).
+
+Assumes an R Project with the data files at:
+
+    data/Listings.csv
+    data/Reviews.csv
+
+## Setup
+
+```{r}
+# setup
+
+library(tidyverse)
+
+listings <- read.csv("data/Listings.csv")
+reviews  <- read.csv("data/Reviews.csv")
+
+dim(listings)
+dim(reviews)
+
+str(listings)
+str(reviews)
+
+# Listings has 1931 rows and 13 columns, Reviews 2360 rows and 3 columns.
+# Note the key column. It is called id in Listings but listing_id in Reviews.
+```
+
+# Q1. Exploratory analysis and data pre-processing
+
+## Q1a. Missing values and odd values before joining
+
+```{r}
+# missing values
+
+summary(listings)
+summary(reviews)
+
+# summary() shows the NA counts per column. beds has 2, avg_rating has 63.
+# room_type is a character column, so blank cells come in as "" rather than
+# NA and is.na() will not catch them. They need their own count.
+
+sum(is.na(listings$beds))
+sum(is.na(reviews$avg_rating))
+sum(listings$room_type == "")
+
+table(listings$room_type)
+
+# 40 listings have a blank room_type. There is also a fourth room type,
+# "Hotel room" with 18 listings, that the data dictionary does not mention.
+
+table(listings$neighborhood)
+table(listings$bathrooms)
+
+# bathrooms is text ("1 bath", "2 shared baths" and so on), not a number.
+# We turn this into a numeric predictor in Q1e below.
+
+length(unique(listings$id)) == nrow(listings)
+length(unique(reviews$listing_id)) == nrow(reviews)
+
+# Every id appears once in each file, so there are no duplicated listings.
+```
+
+## Q1b. Combining the two data sets
+
+```{r}
+# join
+
+# The key has a different name in each table, so the join needs to be told
+# which two columns match, by = c("id" = "listing_id").
+
+nrow(left_join(listings, reviews, by = c("id" = "listing_id")))
+nrow(inner_join(listings, reviews, by = c("id" = "listing_id")))
+nrow(full_join(listings, reviews, by = c("id" = "listing_id")))
+
+# left and inner both give 1931, so every listing has a review row.
+# full gives 2360, which means 429 review rows belong to listings that are not
+# in Listings.csv. They carry no listing information and are dropped.
+
+airbnb <- inner_join(listings, reviews, by = c("id" = "listing_id"))
+
+dim(airbnb)
+```
+
+## Q1c. Removing missing values
+
+```{r}
+# clean
+
+# Three kinds of missing information to deal with: beds is NA, avg_rating is
+# NA, and room_type is a blank string. The final data set must have none.
+
+airbnb_clean <- airbnb |>
+  filter(!is.na(beds)) |>
+  filter(!is.na(avg_rating)) |>
+  filter(room_type != "")
+
+nrow(airbnb)
+nrow(airbnb_clean)
+nrow(airbnb) - nrow(airbnb_clean)
+
+anyNA(airbnb_clean)
+sum(airbnb_clean$room_type == "")
+
+# 101 rows go. That is 2 + 63 + 40 minus the 4 rows that were both blank and
+# unrated. 1830 rows are left and nothing is missing anywhere.
+```
+
+## Q1d. Screening price with a z-score
+
+```{r}
+# outliers
+
+summary(airbnb_clean$price)
+
+# The max price is $50,000 a night against a median of $146. Screen the
+# price column with the z-score check from class, where |z| > 3 is worth a
+# second look.
+
+airbnb_clean$z_price <- (airbnb_clean$price - mean(airbnb_clean$price)) / sd(airbnb_clean$price)
+
+sum(abs(airbnb_clean$z_price) > 3)
+
+airbnb_clean |>
+  filter(abs(z_price) > 3) |>
+  select(id, neighborhood, room_type, price, z_price,
+         host_total_listings, host_since, host_acceptance_rate)
+
+# Exactly two listings come up, both at $50,000. They look like the same host
+# (same host_total_listings, host_since and acceptance rate). The raw file had
+# four rows at $50,000 and the other two already went with the missing values.
+# The next highest price in the data is $1,321, so we treat these two as
+# placeholder prices rather than real listings and take them out. Nothing else
+# is trimmed. The rest of the expensive listings are real and stay in (see Q5).
+
+airbnb_clean <- airbnb_clean |>
+  filter(abs(z_price) <= 3) |>
+  select(-z_price)
+
+nrow(airbnb_clean)
+summary(airbnb_clean$price)
+
+# 1828 listings in the final analysis data set. The z_price column was only
+# needed for the screen, so it is dropped again.
+```
+
+## Q1e. Fixing column types
+
+```{r}
+# types
+
+class(airbnb_clean$host_since)
+
+airbnb_clean$host_since <- as.Date(airbnb_clean$host_since, format = "%m/%d/%Y")
+
+class(airbnb_clean$host_since)
+range(airbnb_clean$host_since)
+
+# host_since came in as text in month/day/year form. Now it is a real Date.
+# Hosts joined between December 2008 and May 2025.
+
+# bathrooms is text ("1 bath", "2 shared baths", "Shared half-bath"). Split it
+# into a numeric bath_count and a bath_shared flag so it can be used as a
+# predictor in Q6.
+
+airbnb_clean <- airbnb_clean |>
+  mutate(
+    bath_shared = str_detect(bathrooms, "shared|half-bath"),
+    bath_count  = case_when(
+      bathrooms == "Shared half-bath" ~ 0.5,
+      TRUE                            ~ as.numeric(str_extract(bathrooms, "[0-9.]+"))
+    )
+  )
+
+count(airbnb_clean, bathrooms, bath_shared, bath_count) |> arrange(bath_count)
+
+# 17 distinct bathroom descriptions collapse cleanly into a numeric scale.
+
+table(airbnb_clean$room_type)
+table(airbnb_clean$neighborhood)
+
+# room_type and neighborhood become factors so that the regression in Q7 uses
+# the most common category of each as the reference level.
+
+airbnb_clean$room_type <- factor(airbnb_clean$room_type)
+airbnb_clean$room_type <- relevel(airbnb_clean$room_type, ref = "Entire home/apt")
+
+airbnb_clean$neighborhood <- factor(airbnb_clean$neighborhood)
+airbnb_clean$neighborhood <- relevel(airbnb_clean$neighborhood, ref = "Union Station")
+
+levels(airbnb_clean$room_type)
+levels(airbnb_clean$neighborhood)
+
+str(airbnb_clean)
+```
+
+## Q1f. Summary tables
+
+```{r}
+# summaries
+
+summary(airbnb_clean[, c("price", "accommodates", "bedrooms", "beds",
+                         "min_nights", "total_reviews", "avg_rating")])
+
+# Price is skewed to the right. Median $146, mean $168, maximum $1,321.
+
+mean(airbnb_clean$superhost)
+
+# The mean of a TRUE/FALSE column is a proportion. About 64% of the listings
+# belong to superhosts.
+
+# Price by room type
+price_by_room <- airbnb_clean |>
+  summarize(listings     = n(),
+            avg_price    = mean(price),
+            sd_price     = sd(price),
+            median_price = median(price),
+            .by = room_type) |>
+  arrange(desc(avg_price))
+
+price_by_room
+
+# Price by neighborhood
+price_by_neighborhood <- airbnb_clean |>
+  summarize(listings     = n(),
+            avg_price    = mean(price),
+            sd_price     = sd(price),
+            median_price = median(price),
+            .by = neighborhood) |>
+  arrange(desc(avg_price))
+
+price_by_neighborhood
+
+# Downtown and Georgetown are the most expensive neighborhoods on average and
+# Edgewood and Columbia Heights the cheapest. Entire homes cost a lot more
+# than private or shared rooms. These two tables are Tables 1 and 2 in the
+# report.
+```
+
+## Q1g. Figures
+
+```{r}
+# fig-room-type
+
+boxplot(price ~ room_type, data = airbnb_clean,
+        main = "Figure 1. Nightly price by room type",
+        xlab = "Room type", ylab = "Price (USD per night)")
+
+# Entire homes and apartments have the highest typical price and the widest
+# spread, with a long tail of expensive listings.
+```
+
+```{r}
+# fig-scatter
+
+plot(airbnb_clean$bedrooms, airbnb_clean$price,
+     main = "Figure 2. Price vs. bedrooms",
+     xlab = "Bedrooms", ylab = "Price (USD per night)",
+     pch = 19)
+
+# Price rises with the number of bedrooms and so does the spread.
+```
+
+```{r}
+# fig-neighborhood
+
+ggplot(data = price_by_neighborhood,
+       aes(x = reorder(neighborhood, avg_price), y = avg_price)) +
+  geom_col(fill = "#08306B", width = 0.6) +
+  coord_flip() +
+  labs(title = "Figure 3. Price by neighborhood",
+       x = "Neighborhood", y = "Average price (USD per night)") +
+  theme_minimal()
+
+# Same picture as the table. Downtown and Georgetown lead, then Capitol Hill.
+# Columbia Heights and Edgewood are the cheapest, at about half the Downtown
+# average.
+```
+
+# Q2. Neighborhood and room type combinations
+
+```{r}
+# combinations
+
+combo_price <- airbnb_clean |>
+  summarize(listings  = n(),
+            avg_price = mean(price),
+            sd_price  = sd(price),
+            cv_price  = sd(price) / mean(price),
+            .by = c(neighborhood, room_type)) |>
+  arrange(desc(avg_price))
+
+combo_price
+
+# cv_price is the coefficient of variation, sd divided by mean. It measures
+# spread relative to the average, which helps when groups have very different
+# average prices.
+
+# 26 of the 40 possible combinations occur in the data. sd is NA when a
+# combination has one listing, because one value has no spread, so those are
+# left out of the variability ranking below.
+
+slice_max(combo_price, avg_price, n = 1)
+slice_min(combo_price, avg_price, n = 1)
+
+combo_price_sd <- filter(combo_price, listings > 1)
+
+slice_max(combo_price_sd, sd_price, n = 1)
+slice_min(combo_price_sd, sd_price, n = 1)
+
+slice_max(combo_price_sd, cv_price, n = 1)
+slice_min(combo_price_sd, cv_price, n = 1)
+
+# Highest average price is Entire home/apt in Downtown, $280.56 over 62 listings.
+# Lowest average price is Shared room in Capitol Hill, $54.33 over 6 listings.
+# Highest variability by sd is Entire home/apt in Georgetown, $179.93 over 71.
+# Lowest variability by sd is Shared room in Downtown, $8.33, but that is only
+# 3 listings. The coefficient of variation picks out the same two combinations
+# (0.73 and 0.10).
+```
+
+# Q3. Confidence interval function
+
+```{r}
+# function
+
+# The function takes a confidence level such as 0.95, the name of a numeric
+# variable as a string such as "price", and a data frame. It returns the
+# confidence interval for the average of that variable using the formula from
+# the Statistics slides, x-bar plus or minus t* times s over the square root of
+# n. t* is the (1 - alpha/2) quantile of the t distribution with n - 1 degrees
+# of freedom. sigma is unknown, so s stands in for it and t replaces z. The
+# function returns the two ends of the interval, lower then upper.
+
+conf_interval <- function(conf_level, var_name, data) {
+
+  x <- data[[var_name]]
+  # data[[var_name]] returns the column whose name is stored in var_name.
+  # data$var_name would look for a column literally called "var_name".
+
+  n     <- length(x)
+  x_bar <- mean(x)
+  s     <- sd(x)
+
+  alpha  <- 1 - conf_level
+  t_star <- qt(1 - alpha / 2, df = n - 1)
+  # qt() gives the t quantile the same way qnorm() on the Probability slides
+  # gives a normal quantile. It is the number the quantile calculator used in
+  # the Statistics class returns for t* with n - 1 degrees of freedom.
+
+  moe <- t_star * s / sqrt(n)
+  # sqrt(n) is the square root in the standard error s / sqrt(n).
+
+  c(x_bar - moe, x_bar + moe)
+}
+```
+
+```{r}
+# apply
+
+conf_interval(0.95, "price", airbnb_clean)
+
+# The pieces behind the interval, for the report:
+mean(airbnb_clean$price)
+sd(airbnb_clean$price)
+length(airbnb_clean$price)
+qt(0.975, df = length(airbnb_clean$price) - 1)
+
+# Check the function against R's own t.test(), which defaults to 95% and
+# prints the confidence interval as part of its output:
+t.test(airbnb_clean$price)
+
+# Same interval, so the function does what it should. It also works at other
+# confidence levels and for other variables:
+conf_interval(0.99, "price", airbnb_clean)
+conf_interval(0.95, "avg_rating", airbnb_clean)
+```
+
+# Q4. Hypothesis test. Is the average price more than $200?
+
+```{r}
+# test
+
+# H0: mu = 200 against Ha: mu > 200. An upper-tailed test with alpha = 0.05.
+
+x_bar <- mean(airbnb_clean$price)
+s     <- sd(airbnb_clean$price)
+n     <- length(airbnb_clean$price)
+
+t_stat <- (x_bar - 200) / (s / sqrt(n))
+t_stat
+
+t_crit <- qt(0.95, df = n - 1)
+t_crit
+
+# The rejection region is t_stat > t_crit. Here t_stat is about -14.7 against
+# a critical value of 1.65, so it is not close to the rejection region.
+
+price_test <- t.test(airbnb_clean$price, mu = 200, alternative = "greater")
+# alternative = "greater" makes t.test() run the upper-tailed test set up on
+# the Statistics slides, so its p-value matches the one-sided hypotheses above.
+
+price_test
+
+price_test$p.value
+
+# The p-value rounds to 1, far above alpha = 0.05, so we fail to reject H0.
+# There is no evidence that the population average price is above $200. The
+# sample mean of $168.03 is well below it. This agrees with Q3, where the whole
+# 95% confidence interval [163.77, 172.30] sits below $200.
+```
+
+# Q5. Is price normally distributed?
+
+```{r}
+# normality-plots
+
+hist(airbnb_clean$price,
+     main = "Figure 4a. Distribution of price",
+     xlab = "Price (USD per night)")
+
+boxplot(airbnb_clean$price,
+        main = "Figure 4b. Boxplot of price",
+        ylab = "Price (USD per night)")
+
+# The histogram is strongly skewed to the right with a long upper tail. The
+# boxplot shows the same thing, with a lot of high-price points above the upper
+# whisker (the 1.5 x IQR rule) and none below. These are real expensive
+# listings and they stay in the data. Only the two $50,000 placeholder prices
+# were removed, back in Q1d.
+```
+
+```{r}
+# empirical-rule
+
+mean(airbnb_clean$price)
+median(airbnb_clean$price)
+
+# The mean ($168) is above the median ($146), which is the sign of positive
+# skew. A normal distribution has mean equal to median.
+
+# Empirical rule check. For a normal distribution about 68.3%, 95.5% and 99.7%
+# of the values fall within 1, 2 and 3 standard deviations of the mean.
+
+z_price <- (airbnb_clean$price - mean(airbnb_clean$price)) / sd(airbnb_clean$price)
+# same z-score as in Q1d, recomputed on the final data
+
+empirical_rule <- data.frame(
+  measure  = c("Within 1 standard deviation",
+               "Within 2 standard deviations",
+               "Within 3 standard deviations"),
+  expected = c(68.3, 95.5, 99.7),
+  observed = c(mean(abs(z_price) <= 1) * 100,
+               mean(abs(z_price) <= 2) * 100,
+               mean(abs(z_price) <= 3) * 100)
+)
+
+empirical_rule
+
+# 81.8% of prices sit within one standard deviation, which is too many. The
+# middle is more concentrated than a normal curve. Only 98.2% sit within three,
+# which is too few, so the right tail is heavier. Price is not normally
+# distributed. Because n = 1828 is large, the CLT still lets us use the t-based
+# interval and test in Q3 and Q4 for the mean, but the skew matters again for
+# the regression residuals in Q7.
+```
+
+# Q6. Best simple linear regression for price
+
+```{r}
+# simple-regressions
+
+# Candidate single predictors are every variable except id (an identifier),
+# host_since (a date), bathrooms (text) and price itself. bath_count (Q1e) is
+# included alongside the other size measures.
+
+predictors <- c("accommodates", "bedrooms", "beds", "bath_count", "room_type",
+                "neighborhood", "superhost", "host_acceptance_rate",
+                "host_total_listings", "min_nights", "total_reviews",
+                "avg_rating")
+
+simple_models <- data.frame(predictor = predictors,
+                            r_squared = NA,
+                            adj_r_squared = NA,
+                            rse = NA)
+
+for (i in seq_along(predictors)) {
+
+  f <- as.formula(paste0("price ~ ", predictors[i]))
+
+  m <- lm(f, data = airbnb_clean)
+
+  simple_models$r_squared[i]     <- summary(m)$r.squared
+  simple_models$adj_r_squared[i] <- summary(m)$adj.r.squared
+  simple_models$rse[i]           <- summary(m)$sigma
+
+}
+
+simple_models <- arrange(simple_models, desc(r_squared))
+
+simple_models
+
+# bedrooms is the best single predictor. R-squared 0.324, so it explains about
+# 32% of the variation in price, and it has the smallest residual standard
+# error at $76.50. accommodates is a close second at 0.289 and $78.46, and
+# bath_count follows at 0.260. avg_rating and superhost explain nothing on
+# their own.
+
+reg_bedrooms <- lm(price ~ bedrooms, data = airbnb_clean)
+
+summary(reg_bedrooms)
+
+# Each additional bedroom goes with about $65.61 more per night on average.
+```
+
+# Q7. Multiple linear regression
+
+```{r}
+# multiple-regression
+
+# Predictors are the two strongest size measures (accommodates and bedrooms),
+# the two location and type factors, and the host and listing characteristics.
+# beds is left out because it is the weakest of the three size measures (Q6)
+# and correlated with both of the others (r = 0.76 and 0.66, see Q8), so it
+# adds little. host_total_listings is left out because a handful of hosts with
+# thousands of listings dominate it.
+
+reg_multi <- lm(price ~ accommodates + bedrooms + room_type + neighborhood +
+                  superhost + avg_rating + total_reviews + min_nights +
+                  host_acceptance_rate,
+                data = airbnb_clean)
+
+summary(reg_multi)
+
+# The reference levels are room_type = "Entire home/apt" and neighborhood =
+# "Union Station", the most common category of each, so every factor
+# coefficient is a comparison against those.
+
+coef(reg_multi)
+
+summary(reg_multi)$r.squared
+summary(reg_multi)$adj.r.squared
+summary(reg_multi)$sigma
+
+# R-squared 0.505, adjusted 0.500, RSE $65.77, against 0.324 and $76.50 for
+# the best simple model. The F-test p-value (below 2.2e-16) says the predictors
+# jointly explain price.
+```
+
+```{r}
+# diagnostics
+
+plot(reg_multi, which = 1, main = "Figure 5a")   # residuals vs fitted
+plot(reg_multi, which = 2, main = "Figure 5b")   # normal Q-Q of residuals
+
+# Residuals vs fitted: the spread of the residuals grows as the fitted price
+# grows, a fan shape, so the variance is not constant. Normal Q-Q: the upper
+# tail bends well above the line, so the residuals are skewed to the right and
+# not normal, driven by the same expensive listings seen in Q5. Both break the
+# model assumptions. The coefficients are still unbiased but the standard
+# errors and p-values are less trustworthy than they look. A log
+# transformation of price is the usual remedy.
+```
+
+# Q8. Multicollinearity check
+
+```{r}
+# multicollinearity
+
+cor(airbnb_clean[, c("accommodates", "bedrooms", "beds", "bath_count",
+                     "avg_rating", "total_reviews", "min_nights",
+                     "host_acceptance_rate")])
+
+# accommodates, bedrooms, beds and bath_count are all correlated with each
+# other (0.54 to 0.76). Bigger places sleep more people and have more beds and
+# bathrooms. Every other pair is below 0.21.
+
+# What happens to the accommodates coefficient with and without bedrooms in
+# the model?
+
+coef(lm(price ~ accommodates, data = airbnb_clean))["accommodates"]
+coef(reg_multi)["accommodates"]
+
+coef(lm(price ~ bedrooms, data = airbnb_clean))["bedrooms"]
+coef(reg_multi)["bedrooms"]
+
+# accommodates on its own is $27.63 per extra guest. Next to bedrooms it is
+# $8.78, so it loses about two thirds of its coefficient, while bedrooms only
+# drops from $65.61 to $47.86. bedrooms is the stronger driver and accommodates
+# partly tracks it. The correlation of 0.74 is as high as the OpenPrice and
+# ShippingCost example from class (0.76), but the consequences here are milder.
+# Both stay significant and neither flips sign. We keep both in the model and
+# say clearly that their individual effects cannot be cleanly separated.
+```
+
+# Q9. Summary and recommendation
+
+The written recommendation opens the report, as the guidelines ask. Every number it uses is produced above: the neighborhood and room type tables in Q1 and Q2, the confidence interval in Q3, the test in Q4, and the regression models in Q6 to Q8.
