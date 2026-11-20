@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pedro Sanchez | Business Analytics Portfolio</title>
-<meta name="description" content="Projects from Pedro Sanchez's Master of Science in Business Analytics at Georgetown University: machine learning, regression, pay equity analysis and Tableau dashboards.">
+<title>Pedro Sánchez Rosillo | Business Analytics Portfolio</title>
+<meta name="description" content="Projects from Pedro Sánchez Rosillo's Master of Science in Business Analytics at Georgetown University: machine learning, regression, pay equity analysis and Tableau dashboards.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -190,6 +190,20 @@
   .role h3 { font-size: 1.1rem; margin: 0 0 4px; font-weight: 700; }
   .role p { margin: 0; color: var(--muted); max-width: var(--measure); }
 
+
+  /* Resume buttons and role bullets */
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 48px; }
+  .btn {
+    display: inline-block; padding: 12px 20px; border-radius: 6px; font-weight: 500;
+    background: var(--ink); color: var(--paper); text-decoration: none;
+  }
+  .btn:hover { background: var(--pine); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .btn-ghost:hover { background: var(--surface); color: var(--pine); border-color: var(--pine); }
+  .top nav a.nav-cv { color: var(--pine); font-weight: 700; }
+  .role ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); max-width: var(--measure); }
+  .role li { margin: 0 0 4px; }
+
   /* Toolkit */
   .kit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 56px; max-width: 920px; }
   .kit h3 { font-size: 1rem; margin: 0 0 6px; }
@@ -241,30 +255,33 @@
     .wrap { padding: 0 20px; }
     .top { flex-direction: column; align-items: flex-start; gap: 8px; }
     .top nav { gap: 16px; font-size: 0.9rem; }
+    .top nav a.nav-cv { display: none; }
   }
 </style>
 </head>
 <body>
 
 <header class="wrap top">
-  <span class="mark">Pedro Sanchez</span>
+  <span class="mark">Pedro Sánchez Rosillo</span>
   <nav aria-label="Main">
     <a href="#projects">Projects</a>
     <a href="#experience">Experience</a>
     <a href="#coursework">Coursework</a>
     <a href="#contact">Contact</a>
+    <a class="nav-cv" href="Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
   </nav>
 </header>
 
 <main>
   <div class="wrap hero">
     <h1>Business questions, answered with data.</h1>
-    <p class="lede">I'm Pedro Sanchez, a business analytics student at Georgetown with a background in finance. I build models, dashboards and memos that someone can actually act on.</p>
+    <p class="lede">I'm Pedro Sánchez Rosillo, a business analytics student at Georgetown with a background in FP&amp;A and accounting. I build models, dashboards and memos that someone can actually act on.</p>
+    <p class="hero-cta"><a class="btn" href="Pedro_Sanchez_Rosillo_Resume.pdf">Download resume (PDF)</a> <a class="btn btn-ghost" href="#projects">See the projects</a></p>
     <dl class="facts">
       <div><dt>Studying</dt><dd>MS Business Analytics, Georgetown McDonough, May 2027</dd></div>
-      <div><dt>Background</dt><dd>FP&amp;A, accounting and treasury</dd></div>
+      <div><dt>Background</dt><dd>FP&amp;A at TD SYNNEX, accounting and treasury</dd></div>
       <div><dt>Based in</dt><dd>Washington, DC and Miami</dd></div>
-      <div><dt>Languages</dt><dd>English, Spanish, French</dd></div>
+      <div><dt>Languages</dt><dd>Spanish and English, professional French</dd></div>
     </dl>
   </div>
 
@@ -343,23 +360,48 @@
 
   <section id="experience">
     <div class="wrap">
-      <h2>Experience</h2>
+      <h2>Experience and education</h2>
       <div class="roles">
         <div class="role">
+          <div class="when">April 2025 to July 2025<br>Florida</div>
+          <div><h3>FP&amp;A Intern, Accounting, TD SYNNEX</h3>
+            <ul>
+              <li>Consolidated monthly reporting across multiple country entities and built Power BI reports to present results to finance leadership</li>
+              <li>Analyzed monthly results and wrote commentary on the key drivers; reviewed margins by operation</li>
+              <li>Supported daily accounting operations and the monthly close</li>
+            </ul></div>
+        </div>
+        <div class="role">
           <div class="when">May 2026 to July 2026<br>Galicia, Spain</div>
-          <div><h3>Accounting and Finance Intern, Castro y Catalá</h3><p>Accounting, treasury and tax support for a family-owned logistics company, working in SAP ERP.</p></div>
+          <div><h3>Accounting and Finance Intern, Castro y Catal&aacute;</h3>
+            <ul>
+              <li>Recorded journal entries for invoices, collections and payments in SAP ERP under the Spanish General Accounting Plan</li>
+              <li>Reconciled bank statements and ran daily treasury in advanced Excel, tracking AP/AR due dates, cash flow and liquidity forecasts</li>
+              <li>Prepared financial reports, budget variance analysis and support for VAT and withholding tax filings</li>
+            </ul></div>
         </div>
         <div class="role">
           <div class="when">March 2026 to July 2026<br>Madrid, Spain</div>
-          <div><h3>Financial Advisor, OVB Allfinanz</h3><p>Personal financial planning for clients.</p></div>
+          <div><h3>Financial Advisor, OVB Allfinanz</h3>
+            <ul>
+              <li>Advised individual clients on financial products, translating technical features into plain-language guidance</li>
+              <li>Compared product options against each client&#8217;s profile and objectives to recommend the best fit</li>
+            </ul></div>
         </div>
         <div class="role">
-          <div class="when">April 2025 to July 2025<br>Florida</div>
-          <div><h3>FP&amp;A Intern, Accounting, TD SYNNEX</h3><p>Financial planning and analysis support within the accounting function.</p></div>
+          <div class="when">Expected May 2027<br>Washington, DC</div>
+          <div><h3>MS in Business Analytics, Georgetown University, McDonough School of Business</h3>
+            <p>Full-time program in machine learning, AI, statistics, programming (R, Python, SQL) and data visualization.</p></div>
         </div>
         <div class="role">
-          <div class="when">Undergraduate thesis<br>Madrid, Spain</div>
-          <div><h3>WePlan business plan, Universidad Europea de Madrid</h3><p>Full business plan for a social app that helps groups meet up in person, including break-even, ARPU and CAPEX/OPEX modeling, defended before a tribunal.</p></div>
+          <div class="when">2022 to 2026<br>Madrid, Spain</div>
+          <div><h3>Bachelor in Business Administration (ADE), Universidad Europea de Madrid</h3>
+            <p>Mergers &amp; Acquisitions 9.8/10 with Honors, Marketing 9.8/10, Econometrics 9.2/10. Thesis: a full business plan and financial model (break-even, ARPU, CAPEX/OPEX) for WePlan, a group-meetup app, defended before an academic tribunal.</p></div>
+        </div>
+        <div class="role">
+          <div class="when">Outside work</div>
+          <div><h3>Tennis, volunteering, languages</h3>
+            <p>Competitive tennis player since age 8. Volunteer with AVANCE, supporting adults with intellectual disabilities, and at the Comedor Social San Juan Bautista food kitchen in Madrid. Lived and studied in Miami, Marseille and Cannes.</p></div>
         </div>
       </div>
     </div>
@@ -369,10 +411,10 @@
     <div class="wrap">
       <h2>Toolkit</h2>
       <div class="kit">
-        <div><h3>Analysis and programming</h3><p>Python (pandas, scikit-learn, statsmodels), R (dplyr, Quarto), SQL, Git and GitHub, Streamlit</p></div>
+        <div><h3>Analysis and programming</h3><p>R (dplyr, ggplot2, Quarto), Python (pandas, scikit-learn, statsmodels), SQL, Git and GitHub, Streamlit</p></div>
         <div><h3>Statistics and machine learning</h3><p>Regression, logistic regression, decision trees, KNN, Random Forest, neural networks, cross-validation</p></div>
-        <div><h3>Visualization and reporting</h3><p>Tableau (calculated fields, parameters, LOD expressions, stories), executive memos and decks</p></div>
-        <div><h3>Finance and business</h3><p>FP&amp;A, accounting, treasury, SAP ERP, financial modeling</p></div>
+        <div><h3>Visualization and reporting</h3><p>Tableau (calculated fields, parameters, LOD expressions, stories), Power BI, executive memos and decks</p></div>
+        <div><h3>Finance and business</h3><p>FP&amp;A, month-end close, treasury and cash forecasting, variance analysis, SAP ERP, advanced Excel, financial modeling</p></div>
       </div>
     </div>
   </section>
@@ -403,6 +445,7 @@
       <h2>Looking for summer 2027 and full-time roles.</h2>
       <p>I'm interested in consulting, strategy, analytics and finance, and available full time from August 2027. Roles that use Spanish or French are a plus.</p>
       <div class="links">
+        <a href="Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
         <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
         <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
         <a href="https://github.com/Pedrosrsanto/msba-portfolio">All projects on GitHub</a>
@@ -412,7 +455,7 @@
 </main>
 
 <footer>
-  <div class="wrap">Pedro Sanchez, 2026</div>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
 </footer>
 
 </body>
