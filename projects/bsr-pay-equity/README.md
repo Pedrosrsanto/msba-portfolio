@@ -95,5 +95,3 @@ The box plot makes the gap visible. At Junior, women's and men's pay boxes sit o
 |---|---|
 | `report/BSR_Leadership_Presentation_MGMT6600.pdf` | 16-slide leadership deck |
 | `images/` | Slides used in this write-up |
-
-[ADD: link to the Tableau story once it's published on Tableau Public]
