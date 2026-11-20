@@ -1,18 +1,18 @@
-# MSBA Portfolio | Pedro Sanchez
+# MSBA Portfolio | Pedro Sánchez Rosillo
 
 Projects and coursework from the Master of Science in Business Analytics at Georgetown University's McDonough School of Business (August 2026 to May 2027).
 
 Every project folder has its own write-up covering the business question, the data, the method, what we found and what we recommended. The reports, code and charts sit alongside each write-up.
 
-**[Portfolio site](https://YOUR-GITHUB-USERNAME.github.io/msba-portfolio/)** | **[LinkedIn](https://www.linkedin.com/in/YOUR-LINKEDIN/)** | **[Email](mailto:YOUR-EMAIL)**
+**[Portfolio site](https://pedrosrsanto.github.io/msba-portfolio/)** | **[Resume (PDF)](https://pedrosrsanto.github.io/msba-portfolio/Pedro_Sanchez_Rosillo_Resume.pdf)** | **[LinkedIn](https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/)** | **[Email](mailto:pedrosrsanto@gmail.com)**
 
 ---
 
 ## About me
 
-I came into analytics from finance. I studied Business Administration (ADE) at Universidad Europea de Madrid, then worked as an FP&A intern at TD SYNNEX in Florida, as a financial advisor at OVB Allfinanz in Madrid, and as an accounting and finance intern at Castro y Catalá, a family-owned logistics company in Galicia, where I worked in SAP on accounting, treasury and tax.
+I came into analytics from finance. I studied Business Administration (ADE) at Universidad Europea de Madrid and worked as an FP&A intern at TD SYNNEX in Florida, where I consolidated multi-country reporting and built Power BI reports for finance leadership, as a financial advisor at OVB Allfinanz in Madrid, and as an accounting and finance intern at Castro y Catalá, a family-owned logistics company in Galicia, where I worked in SAP on accounting, treasury and tax.
 
-That background shapes how I approach data. A model is only useful if someone can act on it, so every project here ends with a recommendation written for the person who has to make the decision, not for another analyst. I'm a native English speaker, also work in Spanish and French, and competed as a high-level athlete before moving into business.
+That background shapes how I approach data. A model is only useful if someone can act on it, so every project here ends with a recommendation written for the person who has to make the decision, not for another analyst. I'm bilingual in Spanish and English, work professionally in French, and have played competitive tennis since I was eight.
 
 **Education:** MS in Business Analytics, Georgetown University (expected May 2027, GPA 4.0) | BA in Business Administration, Universidad Europea de Madrid
 
