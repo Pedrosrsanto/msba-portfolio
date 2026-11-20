@@ -52,7 +52,4 @@ A *Route* calc joins start and end stations, and a *Min Trips per Route* paramet
 
 - **[BSR pay equity Tableau story](../bsr-pay-equity)**: five-dashboard team presentation
 - Practice workbooks on NFL player stats (fantasy points by draft round, hand size, trends by state) and earlier Bike Rentals assignments
-
-## Files
-
-[ADD: link to this workbook on Tableau Public, and screenshots of each view in `images/`]
+- 
