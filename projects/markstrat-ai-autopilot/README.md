@@ -60,10 +60,7 @@ The constitution only works if the team can't quietly steer the AI. So we built 
 
 ## Results
 
-| Round | Cumulative EBT | Market share | Key AI decisions | Constitution changes |
-|---|---|---|---|---|
-| 1 | [ADD] | [ADD] | [ADD] | v3.0 adopted |
-| 2 | [ADD] | [ADD] | [ADD] | [ADD] |
+The simulation runs seven decision rounds through December 5, 2026. Results and the lessons from each round will be added once the final round closes.
 
 ## What I'm learning
 
