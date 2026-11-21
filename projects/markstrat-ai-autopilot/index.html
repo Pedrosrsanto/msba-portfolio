@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markstrat: Writing the Rules for an AI That Runs the Company | Pedro Sánchez Rosillo</title>
+<meta name="description" content="The constitution and controls for an AI that makes every decision for a simulated firm. In progress.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Markstrat: Writing the Rules for an AI That Runs the Company">
+<meta property="og:description" content="The constitution and controls for an AI that makes every decision for a simulated firm. In progress.">
+<meta property="og:url" content="https://pedrosrsanto.github.io/msba-portfolio/projects/markstrat-ai-autopilot/">
+<meta property="og:image" content="https://pedrosrsanto.github.io/msba-portfolio/projects/bsr-pay-equity/images/pay-by-level.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231C2433'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23F3F5F8' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="../../">Pedro Sánchez Rosillo</a>
+  <nav aria-label="Main">
+    <a href="../../#projects">All projects</a>
+    <a href="../../#experience">Experience</a>
+    <a href="../../#contact">Contact</a>
+    <a class="nav-cv" href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap case-head">
+    <p class="crumb"><a href="../../#projects">Projects</a> / Markstrat on AI autopilot</p>
+    <h1>Markstrat: Writing the Rules for an AI That Runs the Company</h1>
+    <p class="status"><strong>Status: in progress.</strong> The simulation runs through seven decision rounds, ending December 5, 2026. Results will be added as they come in.</p>
+    <dl class="meta">
+<div><dt>Course</dt><dd>MARK 6555 Applied Product Management, Georgetown MSBA (Fall 2026, Prof. Luc Wathieu)</dd></div>
+<div><dt>Team 6, Firm R &quot;the Rhinos&quot;</dt><dd>Finley Mynott, Siho Lee, Riya Pradhan, Pedro Sanchez, Kate Smith</dd></div>
+<div><dt>Focus</dt><dd>AI governance, prompt and process design, marketing strategy</dd></div>
+<div><dt>My roles</dt><dd>Constitution steward, verifier and backup AI operator</dd></div>
+    </dl>
+    <p class="actions"><a class="btn" href="report/Team6_Rhinos_AI_Charter_and_Constitution.pdf">Read the AI charter (PDF)</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/markstrat-ai-autopilot">Project folder on GitHub</a></p>
+  </div>
+
+  <article class="wrap case-body">
+<h2>The setup</h2>
+<p>Markstrat is a marketing strategy simulation. Each team runs a firm competing against the other teams in its industry over seven decision rounds. Every round they set the product portfolio, prices, production, advertising, sales force, R&amp;D projects and market research purchases. Teams are graded on <strong>cumulative earnings before taxes at the end of round 7</strong>.</p>
+<p>Each team in the course was assigned a different model for using AI. <strong>Ours was "AI as Autopilot": the AI makes every analysis and every decision, and the team never overrides it.</strong></p>
+<p>That changes what the team actually does. We don't decide prices or budgets. Our only lever is <strong>the written instructions the AI follows</strong>, which we call the constitution, and the process around it.</p>
+<h2>The constitution</h2>
+<p>We wrote a constitution for Claude covering:</p>
+<p><strong>Objectives, in priority order</strong></p>
+<ol>
+<li>Maximize cumulative EBT at the end of round 7. Share and awareness only matter if they feed profit before the game ends</li>
+<li>Never let a plan depend on cash the firm doesn't have</li>
+<li>Invest early, harvest late. As the end approaches, slow-payback investments lose value</li>
+<li>Avoid the big loss. When two options have similar expected profit, take the less risky one</li>
+<li>Finish with a coherent portfolio, each brand with one clear target segment</li>
+</ol>
+<p><strong>Twelve decision principles</strong>, including:</p>
+<ul>
+<li><strong>Produce slightly optimistic, net of inventory.</strong> A stockout loses the sale forever, while a surplus only costs holding, so shade production above forecast by at most 10%</li>
+<li><strong>Price for profit after channel margins.</strong> Never buy share at a loss</li>
+<li><strong>Every dollar must pay back before round 7</strong>, and every research study must answer a named question</li>
+<li><strong>No dramatic changes on thin evidence.</strong> A price move over 10%, a new target segment or a brand launch needs support from two independent data sources</li>
+<li><strong>Expect competitors to react.</strong> Reject any plan that only works if they stand still</li>
+</ul>
+<p><strong>A fixed 13-step analysis</strong> every round: from explaining last period's results against the previous expectations, through segments, positioning maps, conjoint results and competitors, to a brand-by-brand decision comparing at least two options, then a low-demand stress test.</p>
+<p><strong>A strict output format and validation checklist.</strong> One authoritative decision table that can be entered with zero interpretation, the budget math shown, every change from last round justified, and a pass/fail check on every item before the AI finishes.</p>
+<p><strong>Rules for missing data.</strong> The AI never invents or carries forward a number. If a core input is missing, it stops and says so instead of deciding.</p>
+<h2>The process around it</h2>
+<p>The constitution only works if the team can't quietly steer the AI. So we built in controls:</p>
+<ul>
+<li><strong>One run per round.</strong> A fresh chat, a standard opening message, no regenerating and no edited prompts</li>
+<li><strong>No overrides.</strong> We enter exactly what the AI produces, even when we disagree. Disagreements go in a log and can only become a constitution change for a <em>future</em> round</li>
+<li><strong>Separation of duties.</strong> The person who runs the AI never enters the decisions, and the person who enters them never verifies them</li>
+<li><strong>A rule-vs-decision line.</strong> The constitution can set goals and steps, like "stay within budget", but never a specific price, budget or quantity</li>
+<li><strong>Full records.</strong> Every conversation, data pack, run log and constitution version is saved, and old versions are never overwritten</li>
+<li><strong>Pre-agreed fixes for gray areas.</strong> One pre-written repair message is allowed if an answer is cut off or rejected by the simulation, and it asks only for the broken item</li>
+</ul>
+<h2>My part</h2>
+<ul>
+<li><strong>Constitution steward:</strong> I keep the single current version, write proposed changes between rounds and record every change with its reason and the team vote</li>
+<li><strong>Verifier:</strong> I check every number entered into Markstrat against the AI's saved conversation and give the final sign-off</li>
+<li><strong>Backup operator:</strong> if the primary operator can't run a round, I run it, and the verifier role passes to a teammate for that round</li>
+</ul>
+<h2>Results</h2>
+<p>The simulation runs seven decision rounds through December 5, 2026. Results and the lessons from each round will be added once the final round closes.</p>
+<h2>What I'm learning</h2>
+<p>Writing instructions for an AI that you can't override is mostly about deciding, in advance, what good judgment looks like. Most of our constitution isn't marketing theory. It's guardrails: what to do when data is missing, when evidence is thin, when two goals conflict. The same questions come up whenever a company hands real decisions to an AI system.</p>
+<h2>Files</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Folder</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="report/Team6_Rhinos_AI_Charter_and_Constitution.pdf"><code>report/Team6_Rhinos_AI_Charter_and_Constitution.pdf</code></a></td>
+<td>Team AI charter and the full constitution (v3.0)</td>
+</tr>
+</tbody>
+</table></div>
+  </article>
+
+  <div class="wrap"><nav class="pager" aria-label="More projects"><a class="prev" href="../transfer-portal-human-ai/"><span>Previous project</span>Transfer portal report card</a><a class="next" href="../truearth-launch-forecast/"><span>Next project</span>TruEarth pizza launch</a></nav></div>
+
+  <section class="contact">
+    <div class="wrap">
+      <h2>Want to talk through this project?</h2>
+      <p>I'm looking for summer 2027 internships and full-time roles from August 2027 in consulting, strategy, analytics and finance.</p>
+      <div class="links">
+        <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
+        <a href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
+</footer>
+
+</body>
+</html>
