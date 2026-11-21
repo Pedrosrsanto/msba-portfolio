@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Cab Bookings Get Cancelled, and What to Do About It | Pedro Sánchez Rosillo</title>
+<meta name="description" content="Evening app and web rides are 7.6% of bookings but 31% of cancellations; a cost-tuned KNN catches 44 of every 74.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Which Cab Bookings Get Cancelled, and What to Do About It">
+<meta property="og:description" content="Evening app and web rides are 7.6% of bookings but 31% of cancellations; a cost-tuned KNN catches 44 of every 74.">
+<meta property="og:url" content="https://pedrosrsanto.github.io/msba-portfolio/projects/cab-booking-cancellations/">
+<meta property="og:image" content="https://pedrosrsanto.github.io/msba-portfolio/projects/bsr-pay-equity/images/pay-by-level.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231C2433'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23F3F5F8' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="../../">Pedro Sánchez Rosillo</a>
+  <nav aria-label="Main">
+    <a href="../../#projects">All projects</a>
+    <a href="../../#experience">Experience</a>
+    <a href="../../#contact">Contact</a>
+    <a class="nav-cv" href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap case-head">
+    <p class="crumb"><a href="../../#projects">Projects</a> / Cab booking cancellations</p>
+    <h1>Which Cab Bookings Get Cancelled, and What to Do About It</h1>
+    
+    <dl class="meta">
+<div><dt>Course</dt><dd>OPAN 6602 Machine Learning Foundations, Georgetown MSBA (Fall 2026)</dd></div>
+<div><dt>Team</dt><dd>Pedro Sanchez and Anton van der Laar</dd></div>
+<div><dt>Tools</dt><dd>Python (pandas, scikit-learn, statsmodels)</dd></div>
+<div><dt>Methods</dt><dd>Missing-data diagnosis (structural vs. real gaps), KNN imputation, feature engineering, K-nearest neighbors classification (K swept from 1 to 301 with 10-fold CV), cutoff tuning for business costs, logistic regression for effect sizes</dd></div>
+    </dl>
+    <p class="actions"><a class="btn" href="report/Cab_Cancellations_Report.pdf">Read the report (PDF)</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/cab-booking-cancellations/code">View the code</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/cab-booking-cancellations">Project folder on GitHub</a></p>
+  </div>
+
+  <article class="wrap case-body">
+<h2>The headline</h2>
+<p><strong>Booking channel is the biggest single driver of cancellations.</strong> Bookings made on the mobile site cancel 14 to 17 points more often than identical bookings made by phone. Evening website and app city rides are only 7.6% of bookings but account for 31% of all cancellations. Confirming those rides by text alone would catch about 23 cancellations per 1,000 bookings before a car is sent.</p>
+<h2>The business problem</h2>
+<p>About 7 in every 100 bookings at a cab company get cancelled. Each cancellation ties up a driver and a car for a job that never happens, in a slot that could have gone to another customer. Using 10,000 bookings from 2013 in the Bangalore area, we answered two questions:</p>
+<ol>
+<li>Which bookings are most likely to fall through?</li>
+<li>What can the operations team do about it before a car is dispatched?</li>
+</ol>
+<h2>Getting the data right first</h2>
+<p>A lot of the blank fields weren't really missing data. They were blank because they don't apply to that kind of trip: packages only exist for hourly rentals, drop-off points only for city rides, and destination cities only for out-of-town trips. Treating those as missing values would have been a mistake.</p>
+<p>Two fields did have real problems, and we left both out:</p>
+<ul>
+<li><strong>Return time</strong> was blank for about 9 in 10 bookings from January to May and almost never blank after July, which points to a change in how it was recorded. On top of that, 1 in 17 recorded values came <em>before</em> the pickup time.</li>
+<li><strong>Pickup city</strong> was usually blank, and almost always the same city when it was filled in.</li>
+</ul>
+<p>We also fixed impossible entries, such as bookings created after their own pickup time.</p>
+<h2>What drives cancellations</h2>
+<p>We compared bookings that are identical in every way except one, so each factor's effect is measured on its own. The average booking cancels 7.4% of the time.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Compared with an otherwise identical booking...</th>
+<th>Change in chance of cancelling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Booked on the mobile site instead of by phone</td>
+<td>+14 to 17 points</td>
+</tr>
+<tr>
+<td>Booked on the website instead of by phone</td>
+<td>+9 to 10 points</td>
+</tr>
+<tr>
+<td>Evening pickup (5pm to midnight) instead of daytime</td>
+<td>+3 to 5 points</td>
+</tr>
+<tr>
+<td>Booked more than a week ahead instead of 1 to 7 days</td>
+<td>about +13 points*</td>
+</tr>
+<tr>
+<td>Booked less than 3 hours ahead instead of 1 to 7 days</td>
+<td>about +8 points*</td>
+</tr>
+<tr>
+<td>Trip to or from the airport</td>
+<td>about 7 points lower</td>
+</tr>
+</tbody>
+</table></div>
+<div class="chart"><h4>How much each factor changes the chance of a cancellation</h4><p class="sub">Percentage points, compared with an otherwise identical booking. The average booking cancels 7.4% of the time.</p><div class="plot plot-wide"><svg viewBox="0 0 860 314" role="img" aria-labelledby="cab-t cab-d" font-family="inherit"><title id="cab-t">Change in the chance a booking is cancelled</title><desc id="cab-d">Mobile site bookings +14 to 17 points versus phone; website +9 to 10; evening pickup +3 to 5; booked over a week ahead about +13; booked under 3 hours ahead about +8; airport trips about 7 points lower.</desc><line x1="300.0" y1="14" x2="300.0" y2="306" stroke="#E3E8EE" stroke-width="1"/><text x="300.0" y="8" font-size="12" fill="#586274" text-anchor="middle">−10</text><line x1="386.7" y1="14" x2="386.7" y2="306" stroke="#E3E8EE" stroke-width="1"/><text x="386.7" y="8" font-size="12" fill="#586274" text-anchor="middle">−5</text><line x1="473.3" y1="14" x2="473.3" y2="306" stroke="#1C2433" stroke-width="1.5"/><text x="473.3" y="8" font-size="12" fill="#586274" text-anchor="middle">0</text><line x1="560.0" y1="14" x2="560.0" y2="306" stroke="#E3E8EE" stroke-width="1"/><text x="560.0" y="8" font-size="12" fill="#586274" text-anchor="middle">+5</text><line x1="646.7" y1="14" x2="646.7" y2="306" stroke="#E3E8EE" stroke-width="1"/><text x="646.7" y="8" font-size="12" fill="#586274" text-anchor="middle">+10</text><line x1="733.3" y1="14" x2="733.3" y2="306" stroke="#E3E8EE" stroke-width="1"/><text x="733.3" y="8" font-size="12" fill="#586274" text-anchor="middle">+15</text><line x1="820.0" y1="14" x2="820.0" y2="306" stroke="#E3E8EE" stroke-width="1"/><text x="820.0" y="8" font-size="12" fill="#586274" text-anchor="middle">+20</text><text x="284" y="43" font-size="14" fill="#1C2433" text-anchor="end">Booked on the mobile site (vs. phone)</text><rect class="bar" x="716.0" y="32" width="52.0" height="12" rx="4" fill="#1E6B5C"><title>Booked on the mobile site (vs. phone): +14 to 17 pts</title></rect><text x="780.0" y="43" font-size="13" fill="#586274">+14 to 17 pts</text><text x="284" y="89" font-size="14" fill="#1C2433" text-anchor="end">Booked on the website (vs. phone)</text><rect class="bar" x="629.3" y="78" width="17.3" height="12" rx="4" fill="#1E6B5C"><title>Booked on the website (vs. phone): +9 to 10 pts</title></rect><text x="658.7" y="89" font-size="13" fill="#586274">+9 to 10 pts</text><text x="284" y="135" font-size="14" fill="#1C2433" text-anchor="end">Evening pickup (vs. daytime)</text><rect class="bar" x="525.3" y="124" width="34.7" height="12" rx="4" fill="#1E6B5C"><title>Evening pickup (vs. daytime): +3 to 5 pts</title></rect><text x="572.0" y="135" font-size="13" fill="#586274">+3 to 5 pts</text><text x="284" y="181" font-size="14" fill="#1C2433" text-anchor="end">Booked over a week ahead*</text><circle class="dot" cx="698.7" cy="176" r="7" fill="#FFFFFF" stroke="#1E6B5C" stroke-width="2.5"><title>Booked over a week ahead*: about +13 pts</title></circle><text x="714.7" y="181" font-size="13" fill="#586274">about +13 pts</text><text x="284" y="227" font-size="14" fill="#1C2433" text-anchor="end">Booked under 3 hours ahead*</text><circle class="dot" cx="612.0" cy="222" r="7" fill="#FFFFFF" stroke="#1E6B5C" stroke-width="2.5"><title>Booked under 3 hours ahead*: about +8 pts</title></circle><text x="628.0" y="227" font-size="13" fill="#586274">about +8 pts</text><text x="284" y="273" font-size="14" fill="#1C2433" text-anchor="end">Trip to or from the airport</text><circle class="dot" cx="352.0" cy="268" r="7" fill="#1E6B5C" stroke="#1E6B5C" stroke-width="2.5"><title>Trip to or from the airport: about −7 pts</title></circle><text x="368.0" y="273" font-size="13" fill="#586274">about −7 pts</text></svg></div><div class="plot plot-narrow"><svg viewBox="0 0 360 384" role="img" aria-hidden="true" font-family="inherit"><line x1="12.0" y1="20" x2="12.0" y2="380" stroke="#E3E8EE" stroke-width="1"/><text x="12.0" y="14" font-size="11" fill="#586274" text-anchor="middle">−10</text><line x1="124.0" y1="20" x2="124.0" y2="380" stroke="#1C2433" stroke-width="1.5"/><text x="124.0" y="14" font-size="11" fill="#586274" text-anchor="middle">0</text><line x1="236.0" y1="20" x2="236.0" y2="380" stroke="#E3E8EE" stroke-width="1"/><text x="236.0" y="14" font-size="11" fill="#586274" text-anchor="middle">+10</text><line x1="348.0" y1="20" x2="348.0" y2="380" stroke="#E3E8EE" stroke-width="1"/><text x="348.0" y="14" font-size="11" fill="#586274" text-anchor="middle">+20</text><text x="12" y="44" font-size="13" fill="#1C2433" stroke="#FFFFFF" stroke-width="4" paint-order="stroke">Mobile site (vs. phone)</text><rect x="280.8" y="58" width="33.6" height="12" rx="4" fill="#1E6B5C"/><text x="270.8" y="68" font-size="12" fill="#586274" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" font-weight="400" text-anchor="end">+14 to 17</text><text x="12" y="102" font-size="13" fill="#1C2433" stroke="#FFFFFF" stroke-width="4" paint-order="stroke">Website (vs. phone)</text><rect x="224.8" y="116" width="11.2" height="12" rx="4" fill="#1E6B5C"/><text x="244.0" y="126" font-size="12" fill="#586274" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" font-weight="400" text-anchor="start">+9 to 10</text><text x="12" y="160" font-size="13" fill="#1C2433" stroke="#FFFFFF" stroke-width="4" paint-order="stroke">Evening pickup (vs. daytime)</text><rect x="157.6" y="174" width="22.4" height="12" rx="4" fill="#1E6B5C"/><text x="188.0" y="184" font-size="12" fill="#586274" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" font-weight="400" text-anchor="start">+3 to 5</text><text x="12" y="218" font-size="13" fill="#1C2433" stroke="#FFFFFF" stroke-width="4" paint-order="stroke">Booked over a week ahead*</text><circle cx="269.6" cy="238" r="6" fill="#FFFFFF" stroke="#1E6B5C" stroke-width="2.5"/><text x="281.6" y="242" font-size="12" fill="#586274" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" font-weight="400" text-anchor="start">about +13</text><text x="12" y="276" font-size="13" fill="#1C2433" stroke="#FFFFFF" stroke-width="4" paint-order="stroke">Booked under 3 hours ahead*</text><circle cx="213.6" cy="296" r="6" fill="#FFFFFF" stroke="#1E6B5C" stroke-width="2.5"/><text x="225.6" y="300" font-size="12" fill="#586274" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" font-weight="400" text-anchor="start">about +8</text><text x="12" y="334" font-size="13" fill="#1C2433" stroke="#FFFFFF" stroke-width="4" paint-order="stroke">Airport trip</text><circle cx="45.6" cy="354" r="6" fill="#1E6B5C" stroke="#1E6B5C" stroke-width="2.5"/><text x="57.6" y="358" font-size="12" fill="#586274" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" font-weight="400" text-anchor="start">about −7</text></svg></div><p class="key"><span><svg width="26" height="12"><rect x="1" y="1" width="24" height="10" rx="4" fill="#1E6B5C"/></svg>Range across our models</span><span><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#1E6B5C" stroke="#1E6B5C" stroke-width="2"/></svg>Approximate effect</span><span><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#fff" stroke="#1E6B5C" stroke-width="2"/></svg>*Softer finding, weaker in the main model</span></p></div>
+<p>*The timing effect was weaker in our main model than in the others, so we flagged it as a softer finding.</p>
+<p>Phone bookings cancel about 4% of the time, while app bookings are several times riskier. Airport trips sit at the other end: people don't skip their ride to a flight.</p>
+<h2>How well the model works</h2>
+<p>The main model is a <strong>K-nearest neighbors classifier</strong> (scaled inputs, K = 101). Accuracy alone couldn't pick K: from K = 21 up, every model scored about 92.6%, which is exactly what you get by calling every booking "kept". So we chose K on AUC, then <strong>lowered the cutoff to 0.10</strong> so the model flags bookings worth a check-in. A logistic regression on the same features translates the patterns into percentage-point effects the operations team can read.</p>
+<p>Tested on 2,000 bookings the model had never seen:</p>
+<ul>
+<li>Out of every 1,000 bookings, about 74 will cancel</li>
+<li>The model flags 256 bookings to check, and <strong>44 of the 74 cancellations are on that list</strong></li>
+<li>A flagged booking is <strong>more than twice as likely</strong> to cancel as an average one</li>
+<li>Unflagged bookings cancel less than 5% of the time</li>
+</ul>
+<p>We deliberately tuned the model to catch more cancellations at the cost of some false alarms. Checking in with a customer costs a text message. Missing a cancellation costs a wasted trip.</p>
+<h2>Recommendations</h2>
+<ol>
+<li><strong>Confirm every evening website or app city ride before committing a car.</strong> About 76 texts per 1,000 bookings to reach roughly 23 cancellations early.</li>
+<li><strong>Widen to the model's full list when there's capacity.</strong> 256 checks per 1,000 bookings reaches 44 cancellations: nearly twice as many for a bit more than three times the effort.</li>
+<li><strong>Add a "tap to confirm" step in the app two hours before pickup.</strong> Channel is the biggest single factor, so this is the cheapest place to start.</li>
+<li><strong>Hold off assigning a driver to evening app bookings until they confirm.</strong> With 3 in 10 of them not happening, holding a car for each one wastes capacity.</li>
+<li><strong>Stop checking phone bookings to or from the airport.</strong> They're 15% of bookings and cancel less than 1% of the time.</li>
+<li><strong>Send a day-before reminder for bookings made more than a week out.</strong> About 5% of bookings, with roughly 9% cancelling.</li>
+</ol>
+<h2>What to keep in mind</h2>
+<ul>
+<li><strong>These results show who to watch, not what will change behavior.</strong> App customers may just have looser plans, so pushing them to book by phone wouldn't necessarily help. We proposed a simple trial: send confirmations to a random half of flagged bookings for a month and compare wasted trips against the other half.</li>
+<li><strong>Cancellations rose sharply through the year</strong>, from 1 to 3% early on to 15 to 18% by November. Before relying on the model day to day, we'd test it on the most recent months and find out what caused the jump. Fixing that cause could matter more than any model.</li>
+</ul>
+<h2>Files</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Folder</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="report/Cab_Cancellations_Report.pdf"><code>report/Cab_Cancellations_Report.pdf</code></a></td>
+<td>Two-page report for the operations team</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/blob/main/projects/cab-booking-cancellations/code/cab_cancellations_knn.ipynb"><code>code/cab_cancellations_knn.ipynb</code></a></td>
+<td>Full analysis notebook</td>
+</tr>
+</tbody>
+</table></div>
+  </article>
+
+  <div class="wrap"><nav class="pager" aria-label="More projects"><a class="prev" href="../airbnb-dc-pricing/"><span>Previous project</span>Airbnb pricing in DC</a><a class="next" href="../bike-share-tableau/"><span>Next project</span>Bike share insights</a></nav></div>
+
+  <section class="contact">
+    <div class="wrap">
+      <h2>Want to talk through this project?</h2>
+      <p>I'm looking for summer 2027 internships and full-time roles from August 2027 in consulting, strategy, analytics and finance.</p>
+      <div class="links">
+        <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
+        <a href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
+</footer>
+
+</body>
+</html>
