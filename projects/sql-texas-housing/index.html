@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL Lab: The Texas Housing Market, 2000 to 2015 | Pedro Sánchez Rosillo</title>
+<meta name="description" content="Ten SQLite queries tracing the 2000 to 2015 housing cycle.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL Lab: The Texas Housing Market, 2000 to 2015">
+<meta property="og:description" content="Ten SQLite queries tracing the 2000 to 2015 housing cycle.">
+<meta property="og:url" content="https://pedrosrsanto.github.io/msba-portfolio/projects/sql-texas-housing/">
+<meta property="og:image" content="https://pedrosrsanto.github.io/msba-portfolio/projects/bsr-pay-equity/images/pay-by-level.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231C2433'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23F3F5F8' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="../../">Pedro Sánchez Rosillo</a>
+  <nav aria-label="Main">
+    <a href="../../#projects">All projects</a>
+    <a href="../../#experience">Experience</a>
+    <a href="../../#contact">Contact</a>
+    <a class="nav-cv" href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap case-head">
+    <p class="crumb"><a href="../../#projects">Projects</a> / SQL: Texas housing</p>
+    <h1>SQL Lab: The Texas Housing Market, 2000 to 2015</h1>
+    
+    <dl class="meta">
+<div><dt>Course</dt><dd>OPAN 6608 Programming III: Massive Data, Georgetown MSBA (Fall 2026)</dd></div>
+<div><dt>Tools</dt><dd>SQL (SQLite), Jupyter with the <code>ipython-sql</code> extension</dd></div>
+<div><dt>Skills</dt><dd>Filtering, boolean logic, aggregation, <code>GROUP BY</code> / <code>HAVING</code>, pattern matching, sorting and limits</dd></div>
+    </dl>
+    <p class="actions"><a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/sql-texas-housing/code">View the code</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/sql-texas-housing">Project folder on GitHub</a></p>
+  </div>
+
+  <article class="wrap case-body">
+<h2>The data</h2>
+<p>A SQLite database of monthly housing market records for Texas cities from 2000 to 2015: city, year, month, number of sales, dollar volume, median sale price, active listings and months of inventory.</p>
+<h2>Questions and findings</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Question</th>
+<th>Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>First 7 records</td>
+<td>All Abilene, January to July 2000</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Records with more than 100 sales <strong>and</strong> a median price above $100k</td>
+<td><strong>5,106</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Records with more than 100 sales <strong>or</strong> a median below $100k, by month</td>
+<td>546 (November) to 639 (May): spring and early summer lead</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Top 20 city-years by mean monthly sales, excluding cities starting with H</td>
+<td>Dallas takes the first 16 spots, led by <strong>2006 (about 5,352 sales a month)</strong>; Austin fills the rest</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Austin sales, December 2010</td>
+<td><strong>1,561</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Austin's best month in 2010</td>
+<td><strong>May (2,286)</strong>, then April (2,230). January was lowest at 985</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Top 5 city-months in 2010, excluding Austin</td>
+<td>Houston takes the top four (May, June, April, March); Dallas in May is fifth (4,891)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Fewest sales ever</td>
+<td><strong>San Marcos, October 2011: 6 sales</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Mean sales by year</td>
+<td>Climbed from about 403 in 2000 to a peak of about 630 in 2006, fell through the housing crash to about 440 in 2010, then recovered to about 646 by 2015</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Years with mean sales above 600</td>
+<td>2006, 2013, 2014 and 2015</td>
+</tr>
+</tbody>
+</table></div>
+<h2>What the numbers say about the market</h2>
+<p>Taken together, the queries trace the full housing cycle in Texas: steady growth to 2006, a four-year slide through the crash, and a recovery that passed the old peak by 2015. Activity is seasonal, peaking in late spring, and heavily concentrated in Houston and Dallas.</p>
+<h2>Code</h2>
+<p>All ten queries are in <a href="https://github.com/Pedrosrsanto/msba-portfolio/blob/main/projects/sql-texas-housing/code/texas_housing_queries.sql"><code>code/texas_housing_queries.sql</code></a>. An example: which years had mean monthly sales above 600?</p>
+<pre><code class="language-sql">SELECT year, AVG(sales) AS mean_sales
+FROM housing
+GROUP BY year
+HAVING mean_sales &gt; 600;
+</code></pre>
+  </article>
+
+  <div class="wrap"><nav class="pager" aria-label="More projects"><a class="prev" href="../truearth-launch-forecast/"><span>Previous project</span>TruEarth pizza launch</a><a class="next" href="../faker-synthetic-data/"><span>Next project</span>Faker for synthetic data</a></nav></div>
+
+  <section class="contact">
+    <div class="wrap">
+      <h2>Want to talk through this project?</h2>
+      <p>I'm looking for summer 2027 internships and full-time roles from August 2027 in consulting, strategy, analytics and finance.</p>
+      <div class="links">
+        <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
+        <a href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
+</footer>
+
+</body>
+</html>
