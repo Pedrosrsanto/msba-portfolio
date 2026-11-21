@@ -48,7 +48,7 @@
   /* Top bar */
   .top {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 22px 0;
+    padding: 22px 28px;
     font-size: 0.95rem;
   }
   .top .mark { font-weight: 700; letter-spacing: -0.01em; }
@@ -260,7 +260,7 @@
   }
   @media (max-width: 480px) {
     .wrap { padding: 0 20px; }
-    .top { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .top { flex-direction: column; align-items: flex-start; gap: 8px; padding: 18px 20px; }
     .top nav { gap: 16px; font-size: 0.9rem; }
     .top nav a.nav-cv { display: none; }
   }
@@ -302,9 +302,9 @@
           <h3>Why do people leave Canterra, and can HR see it coming?</h3>
           <p>Duplicated HR records made our models look 99% accurate when they caught only 13% of leavers on new employees. Once fixed, the real drivers were a poor work environment and frequent travel, not pay: four actions worth about $3.9M a year. A tuned Random Forest then put 41% of leavers in the riskiest 20% of staff.</p>
           <ul class="tools"><li>Python</li><li>Logistic regression</li><li>Random Forest</li><li>Neural network</li></ul>
-          <p class="links"><a class="more" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/canterra-attrition">Read the write-up</a></p>
+          <p class="links"><a class="more" href="projects/canterra-attrition/">Read the case study</a></p>
         </div>
-        <a class="feature-img" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/canterra-attrition"><img src="projects/canterra-attrition/images/aml-roc-and-gains.png" alt="ROC curves and cumulative gains for the Random Forest, neural network and logistic regression"></a>
+        <a class="feature-img" href="projects/canterra-attrition/"><img src="projects/canterra-attrition/images/aml-roc-and-gains.png" alt="ROC curves and cumulative gains for the Random Forest, neural network and logistic regression"></a>
       </article>
 
       <article class="feature">
@@ -313,9 +313,9 @@
           <h3>Who uses LinkedIn, and can six demographics tell you?</h3>
           <p>A logistic regression on Pew survey data, deployed as a live Streamlit app anyone can try. Education and income drive LinkedIn use and age matters mostly after 65. The model finds two in three real users at 70% accuracy.</p>
           <ul class="tools"><li>Python</li><li>scikit-learn</li><li>Streamlit</li></ul>
-          <p class="links"><a class="more" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/linkedin-usage-predictor">Read the write-up</a> <a class="more" href="https://linkedin-predictor-msba-group11.streamlit.app/">Open the live app</a></p>
+          <p class="links"><a class="more" href="projects/linkedin-usage-predictor/">Read the case study</a> <a class="more" href="https://linkedin-predictor-msba-group11.streamlit.app/">Open the live app</a></p>
         </div>
-        <a class="feature-img" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/linkedin-usage-predictor"><img src="projects/linkedin-usage-predictor/images/linkedin-use-by-feature.png" alt="Share of LinkedIn users by income, education, age and other features"></a>
+        <a class="feature-img" href="projects/linkedin-usage-predictor/"><img src="projects/linkedin-usage-predictor/images/linkedin-use-by-feature.png" alt="Share of LinkedIn users by income, education, age and other features"></a>
       </article>
 
       <article class="feature">
@@ -324,9 +324,9 @@
           <h3>Median pay says equal. Mean pay says $15,446. Which one is lying?</h3>
           <p>Neither. Pay is equal for four in five employees, and 85 Directors make up 95% of the gap, which held at 27.1% across 30 robustness models. We took it to leadership as a memo and deck, then as a five-dashboard Tableau story. I built and presented the Junior vs. Director dashboard.</p>
           <ul class="tools"><li>Tableau</li><li>Regression</li><li>Executive memo</li></ul>
-          <p class="links"><a class="more" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/bsr-pay-equity">Read the write-up</a></p>
+          <p class="links"><a class="more" href="projects/bsr-pay-equity/">Read the case study</a></p>
         </div>
-        <a class="feature-img" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/bsr-pay-equity"><img src="projects/bsr-pay-equity/images/pay-by-level.png" alt="Slide showing BSR pay by level: equal at Junior, 25.7% gap at Director"></a>
+        <a class="feature-img" href="projects/bsr-pay-equity/"><img src="projects/bsr-pay-equity/images/pay-by-level.png" alt="Slide showing BSR pay by level: equal at Junior, 25.7% gap at Director"></a>
       </article>
 
       <article class="feature">
@@ -335,9 +335,9 @@
           <h3>What will this used Corolla actually resell for?</h3>
           <p>A regression model that explains 91% of resale price on cars it had never seen, with a typical miss of about EUR 786, turned into a one-page pricing guide for a dealership&#8217;s sales floor.</p>
           <ul class="tools"><li>Python</li><li>statsmodels</li><li>Regression</li></ul>
-          <p class="links"><a class="more" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/toyota-corolla-pricing">Read the write-up</a></p>
+          <p class="links"><a class="more" href="projects/toyota-corolla-pricing/">Read the case study</a></p>
         </div>
-        <a class="feature-img" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/toyota-corolla-pricing"><img src="projects/toyota-corolla-pricing/images/actual-vs-predicted.png" alt="Actual vs. predicted resale price on the test set"></a>
+        <a class="feature-img" href="projects/toyota-corolla-pricing/"><img src="projects/toyota-corolla-pricing/images/actual-vs-predicted.png" alt="Actual vs. predicted resale price on the test set"></a>
       </article>
 
       <article class="feature">
@@ -346,21 +346,21 @@
           <h3>What actually moves the nightly price of a DC Airbnb?</h3>
           <p>Size, then location. Each extra bedroom is worth about $48 a night holding location fixed, and Downtown or Georgetown adds $60 to $90. Superhost status and ratings add nothing once size and location are in the model.</p>
           <ul class="tools"><li>R</li><li>Multiple regression</li><li>Quarto</li></ul>
-          <p class="links"><a class="more" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/airbnb-dc-pricing">Read the write-up</a></p>
+          <p class="links"><a class="more" href="projects/airbnb-dc-pricing/">Read the case study</a></p>
         </div>
-        <a class="feature-img" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/airbnb-dc-pricing"><img src="projects/airbnb-dc-pricing/images/price-by-neighborhood.png" alt="Nightly price distribution by DC neighborhood"></a>
+        <a class="feature-img" href="projects/airbnb-dc-pricing/"><img src="projects/airbnb-dc-pricing/images/price-by-neighborhood.png" alt="Nightly price distribution by DC neighborhood"></a>
       </article>
 
       <h3 class="group">More work</h3>
       <ul class="more-list">
-          <li><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/cab-booking-cancellations"><strong>Cab booking cancellations</strong><span class="course">Machine Learning Foundations</span><span class="line">Evening app and web rides are 7.6% of bookings but 31% of cancellations; a cost-tuned KNN catches 44 of every 74.</span></a></li>
-          <li><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/bike-share-tableau"><strong>Bike share insights</strong><span class="course">Visualization &amp; Storytelling, individual</span><span class="line">Seven Tableau views showing a system that runs on train commuters, each ending in an operational action.</span></a></li>
-          <li><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/transfer-portal-human-ai"><strong>Transfer portal report card</strong><span class="course">Collaborative Intelligence</span><span class="line">A human-AI scoring tool for college football recruiting, with validation tests and stop rules set in advance.</span></a></li>
-          <li><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/markstrat-ai-autopilot"><strong>Markstrat on AI autopilot</strong><span class="course">Applied Product Management</span><span class="line">The constitution and controls for an AI that makes every decision for a simulated firm. In progress.</span></a></li>
-          <li><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/truearth-launch-forecast"><strong>TruEarth pizza launch</strong><span class="course">Applied Product Management, individual</span><span class="line">A segmented trial-and-repeat forecast: $17.0M wholesale against a $12M hurdle.</span></a></li>
-          <li><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/sql-texas-housing"><strong>SQL: Texas housing</strong><span class="course">Programming III, individual</span><span class="line">Ten SQLite queries tracing the 2000 to 2015 housing cycle.</span></a></li>
-          <li><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/faker-synthetic-data"><strong>Faker for synthetic data</strong><span class="course">Programming II</span><span class="line">A live-coded Python walkthrough of generating realistic test data.</span></a></li>
-          <li><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/r-programming-fundamentals"><strong>R: eBay categories</strong><span class="course">Programming I</span><span class="line">Base R and dplyr analysis of 1,223 auctions for a reseller.</span></a></li>
+          <li><a href="projects/cab-booking-cancellations/"><strong>Cab booking cancellations</strong><span class="course">Machine Learning Foundations</span><span class="line">Evening app and web rides are 7.6% of bookings but 31% of cancellations; a cost-tuned KNN catches 44 of every 74.</span></a></li>
+          <li><a href="projects/bike-share-tableau/"><strong>Bike share insights</strong><span class="course">Visualization &amp; Storytelling, individual</span><span class="line">Seven Tableau views showing a system that runs on train commuters, each ending in an operational action.</span></a></li>
+          <li><a href="projects/transfer-portal-human-ai/"><strong>Transfer portal report card</strong><span class="course">Collaborative Intelligence</span><span class="line">A human-AI scoring tool for college football recruiting, with validation tests and stop rules set in advance.</span></a></li>
+          <li><a href="projects/markstrat-ai-autopilot/"><strong>Markstrat on AI autopilot</strong><span class="course">Applied Product Management</span><span class="line">The constitution and controls for an AI that makes every decision for a simulated firm. In progress.</span></a></li>
+          <li><a href="projects/truearth-launch-forecast/"><strong>TruEarth pizza launch</strong><span class="course">Applied Product Management, individual</span><span class="line">A segmented trial-and-repeat forecast: $17.0M wholesale against a $12M hurdle.</span></a></li>
+          <li><a href="projects/sql-texas-housing/"><strong>SQL: Texas housing</strong><span class="course">Programming III, individual</span><span class="line">Ten SQLite queries tracing the 2000 to 2015 housing cycle.</span></a></li>
+          <li><a href="projects/faker-synthetic-data/"><strong>Faker for synthetic data</strong><span class="course">Programming II</span><span class="line">A live-coded Python walkthrough of generating realistic test data.</span></a></li>
+          <li><a href="projects/r-programming-fundamentals/"><strong>R: eBay categories</strong><span class="course">Programming I</span><span class="line">Base R and dplyr analysis of 1,223 auctions for a reseller.</span></a></li>
       </ul>
     </div>
   </section>
