@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Drives the Resale Value of a Used Toyota Corolla | Pedro Sánchez Rosillo</title>
+<meta name="description" content="A regression model that explains 91% of resale price on cars it had never seen, with a typical miss of about EUR 786, turned into a one-page pricing guide for a dealership’s sales floor.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What Drives the Resale Value of a Used Toyota Corolla">
+<meta property="og:description" content="A regression model that explains 91% of resale price on cars it had never seen, with a typical miss of about EUR 786, turned into a one-page pricing guide for a dealership’s sales floor.">
+<meta property="og:url" content="https://pedrosrsanto.github.io/msba-portfolio/projects/toyota-corolla-pricing/">
+<meta property="og:image" content="https://pedrosrsanto.github.io/msba-portfolio/projects/toyota-corolla-pricing/images/actual-vs-predicted.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231C2433'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23F3F5F8' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="../../">Pedro Sánchez Rosillo</a>
+  <nav aria-label="Main">
+    <a href="../../#projects">All projects</a>
+    <a href="../../#experience">Experience</a>
+    <a href="../../#contact">Contact</a>
+    <a class="nav-cv" href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap case-head">
+    <p class="crumb"><a href="../../#projects">Projects</a> / Used Corolla resale pricing</p>
+    <h1>What Drives the Resale Value of a Used Toyota Corolla</h1>
+    
+    <dl class="meta">
+<div><dt>Course</dt><dd>OPAN 6602 Machine Learning Foundations, Georgetown MSBA (Fall 2026)</dd></div>
+<div><dt>Team</dt><dd>Pedro Sanchez and Anton van der Laar</dd></div>
+<div><dt>Tools</dt><dd>Python (pandas, statsmodels, scikit-learn, matplotlib)</dd></div>
+<div><dt>Methods</dt><dd>Multiple linear regression, residual diagnostics, Cook's distance, VIF, forward/backward/stepwise selection, non-linear terms</dd></div>
+    </dl>
+    <p class="actions"><a class="btn" href="report/Corolla_Resale_Value_Report.pdf">Read the report (PDF)</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/toyota-corolla-pricing/code">View the code</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/toyota-corolla-pricing">Project folder on GitHub</a></p>
+  </div>
+
+  <article class="wrap case-body">
+<h2>The headline</h2>
+<p><strong>Our final model explains 91% of the variation in resale price on cars it had never seen, with a typical miss of about EUR 786.</strong> We turned it into a one-page pricing guide that a salesperson can use on the floor to anchor a trade-in offer.</p>
+<h2>The business problem</h2>
+<p>A dealership running a trade-in promotion needs to estimate what a used Corolla will resell for <em>before</em> making an offer. Offer too much and the margin disappears. Offer too little and the customer walks. They asked us for two things:</p>
+<ol>
+<li>A practical price estimate</li>
+<li>A clear list of the specifications that should actually change the offer, and the ones that shouldn't</li>
+</ol>
+<h2>Data</h2>
+<p>1,436 past Corolla sales, with price, age, mileage, engine size, horsepower, fuel type, weight, road tax, guarantees and a long list of optional extras. We built the model on 60% of the sales and tested it on the other 40%, so every accuracy figure below comes from cars the model hadn't seen.</p>
+<h2>Approach</h2>
+<p><strong>1. Baseline model.</strong> A multiple regression on the required set of specifications. Test R-squared was already 0.882, with an average miss of EUR 890.</p>
+<p><strong>2. Diagnostics.</strong> Residual plots showed a slight curve and wider misses at higher prices. Cook's distance flagged a handful of extreme records.</p>
+<p><strong>3. Cleaning, with a rule.</strong> We removed three records with a real data problem, including a car listed with an impossible 16,000 cc engine. That single value had been distorting the engine coefficients. We <strong>didn't</strong> remove the expensive Corolla Versos just because the model missed them: there were several of them with consistent specs, and deleting only the awkward ones would have been cherry-picking.</p>
+<p><strong>4. Trying alternatives one change at a time.</strong> We ran forward, backward and stepwise selection as a check, then built our own three models, adding one change each time to see what it bought:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>What changed</th>
+<th>Test RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baseline</td>
+<td>Required predictors</td>
+<td>EUR 1,219</td>
+</tr>
+<tr>
+<td>Cleaned baseline</td>
+<td>Three bad records removed</td>
+<td>EUR 1,178</td>
+</tr>
+<tr>
+<td>Model A</td>
+<td>+ Weight, BOVAG guarantee</td>
+<td>EUR 1,150</td>
+</tr>
+<tr>
+<td><strong>Model B (selected)</strong></td>
+<td><strong>+ Age squared</strong></td>
+<td><strong>EUR 1,075</strong></td>
+</tr>
+<tr>
+<td>Model C</td>
+<td>+ Age x mileage interaction</td>
+<td>EUR 1,076</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="images/price-vs-age.png"><img src="images/price-vs-age.png" alt="Price vs age" width="635" height="470" decoding="async"></a><figcaption>Price vs age</figcaption></figure>
+<p>Adding <strong>age squared</strong> made the biggest single difference. Cars lose value fastest when they're new, and a straight line can't capture that. Model C fit the training data slightly better but did a little worse on the test set, so it didn't earn the extra complexity.</p>
+<h2>Results</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Performance on unseen cars</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Share of price variation explained (R-squared)</td>
+<td><strong>91%</strong></td>
+</tr>
+<tr>
+<td>Typical absolute miss (MAE)</td>
+<td><strong>about EUR 786</strong></td>
+</tr>
+<tr>
+<td>Cars estimated within EUR 1,000</td>
+<td><strong>71 out of 100</strong></td>
+</tr>
+<tr>
+<td>Cars estimated within EUR 1,500</td>
+<td><strong>87 out of 100</strong></td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="images/actual-vs-predicted.png"><img src="images/actual-vs-predicted.png" alt="Actual vs predicted" width="558" height="470" decoding="async"></a><figcaption>Actual vs predicted</figcaption></figure>
+<h3>What actually drives the price</h3>
+<ul>
+<li><strong>Age comes first.</strong> At one year old, an extra month costs about EUR 170 in resale value. By six years old it's closer to EUR 68.</li>
+<li><strong>Mileage is next.</strong> Each extra 10,000 km takes about EUR 160 off, holding everything else fixed.</li>
+<li><strong>Automatic climate control is the standout option</strong>, worth about EUR 2,170. Ordinary air conditioning is worth about EUR 390 and powered windows about EUR 270.</li>
+<li><strong>Guarantees matter.</strong> A BOVAG guarantee adds about EUR 520 and a manufacturer guarantee about EUR 240.</li>
+<li><strong>What doesn't matter:</strong> a CD player, a sport badge, a tow bar and automatic transmission showed no reliable premium once the rest of the car was accounted for.</li>
+<li><strong>The engine package should be read as one block.</strong> Horsepower, weight, fuel type and road tax overlap heavily, so they tell you whether a car is a higher- or lower-value version. They shouldn't be added up as separate option prices.</li>
+</ul>
+<h2>From model to the sales floor</h2>
+<p>The deliverable was a one-page guide written for salespeople, not analysts. It includes a quick-reference grid of estimated prices by age and mileage, a list of what to add for each option, and a worked example:</p>
+<blockquote>
+<p>A four-year-old Corolla with 90,000 km starts at about EUR 10,730. Add automatic climate control and a BOVAG guarantee (about EUR 2,700 together) and the paperwork-based estimate is around EUR 13,400, before the physical inspection.</p>
+</blockquote>
+<p>Because the typical miss is about EUR 786, we told the dealership to think in a price band and to treat the estimate as a ceiling for cars in worse-than-average condition. The model can't see dents, worn tyres or a missing service book.</p>
+<h2>Files</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/blob/main/projects/toyota-corolla-pricing/code/corolla_resale_price_model.ipynb"><code>code/corolla_resale_price_model.ipynb</code></a></td>
+<td>Full analysis notebook</td>
+</tr>
+<tr>
+<td><a href="report/Corolla_Resale_Value_Report.pdf"><code>report/Corolla_Resale_Value_Report.pdf</code></a></td>
+<td>Two-page report for the dealership</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/toyota-corolla-pricing/images"><code>images/</code></a></td>
+<td>Charts used in this write-up</td>
+</tr>
+</tbody>
+</table></div>
+  </article>
+
+  <div class="wrap"><nav class="pager" aria-label="More projects"><a class="prev" href="../bsr-pay-equity/"><span>Previous project</span>Pay equity at BSR</a><a class="next" href="../airbnb-dc-pricing/"><span>Next project</span>Airbnb pricing in DC</a></nav></div>
+
+  <section class="contact">
+    <div class="wrap">
+      <h2>Want to talk through this project?</h2>
+      <p>I'm looking for summer 2027 internships and full-time roles from August 2027 in consulting, strategy, analytics and finance.</p>
+      <div class="links">
+        <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
+        <a href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
+</footer>
+
+</body>
+</html>
