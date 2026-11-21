@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Report Card for the College Football Transfer Portal | Pedro Sánchez Rosillo</title>
+<meta name="description" content="A human-AI scoring tool for college football recruiting, with validation tests and stop rules set in advance.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A Report Card for the College Football Transfer Portal">
+<meta property="og:description" content="A human-AI scoring tool for college football recruiting, with validation tests and stop rules set in advance.">
+<meta property="og:url" content="https://pedrosrsanto.github.io/msba-portfolio/projects/transfer-portal-human-ai/">
+<meta property="og:image" content="https://pedrosrsanto.github.io/msba-portfolio/projects/transfer-portal-human-ai/images/four-tests-and-stop-rules.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231C2433'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23F3F5F8' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="../../">Pedro Sánchez Rosillo</a>
+  <nav aria-label="Main">
+    <a href="../../#projects">All projects</a>
+    <a href="../../#experience">Experience</a>
+    <a href="../../#contact">Contact</a>
+    <a class="nav-cv" href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap case-head">
+    <p class="crumb"><a href="../../#projects">Projects</a> / Transfer portal report card</p>
+    <h1>A Report Card for the College Football Transfer Portal</h1>
+    
+    <dl class="meta">
+<div><dt>Course</dt><dd>MGMT 6601 Collaborative Intelligence, Georgetown MSBA (Fall 2026)</dd></div>
+<div><dt>Team 6</dt><dd>Finley Mynott, Siho Lee, Riya Pradhan, Pedro Sanchez, Kate Smith</dd></div>
+<div><dt>Focus</dt><dd>Human-AI decision design, sports analytics, model validation, responsible AI</dd></div>
+<div><dt>Deliverable</dt><dd>Six-minute pitch to a mock college football leadership team</dd></div>
+    </dl>
+    <p class="actions"><a class="btn" href="report/Transfer_Portal_Pitch_Team6.pdf">See the pitch deck (PDF)</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/transfer-portal-human-ai">Project folder on GitHub</a></p>
+  </div>
+
+  <article class="wrap case-body">
+<h2>The headline</h2>
+<p>We designed a <strong>"credit score for recruits"</strong>: one report card for every transfer portal player a team considers. It predicts how much he'll help next season, shows how confident that prediction is, and compares it with what he'll cost. Coaches still make every call. The model's job is to make sure overlooked players at small schools get a fair look and the budget goes further.</p>
+<h2>The decision</h2>
+<p>The transfer portal is the list of college players who want to switch schools, and teams get only a few weeks to choose. Using the University of Georgia as a running example: there's no general manager, so every recruiting and pay decision runs through the head coach. Today, staff filter a long list by star ratings and highlight videos.</p>
+<p>Picture one open roster spot and a tight budget. One player comes from a famous program, the other from a small school nobody watches. Who do you pick?</p>
+<h2>The problem <em>(my section of the pitch)</em></h2>
+<p><strong>What we know:</strong></p>
+<ul>
+<li><strong>Ratings are noisy.</strong> After more film review, 247Sports moved Georgia's transfer class from 32nd to 19th</li>
+<li><strong>Results vary.</strong> Teams that leaned hardest on transfers averaged about 1.4 fewer wins. Weaker teams may simply use more transfers, though, so we didn't claim cause</li>
+</ul>
+<p><strong>What we suspected, framed as testable hypotheses:</strong></p>
+<ul>
+<li><strong>H1, bias:</strong> coaches overrate famous names</li>
+<li><strong>H2, noise:</strong> different staff rate the same player differently</li>
+<li><strong>H3, one voice:</strong> everything filters through the head coach</li>
+</ul>
+<p><strong>Why now:</strong> the new federal rules our pitch was built around limit players to one free transfer, cap spending and stop scholarships being pulled for poor play. Every signing becomes a long commitment, so mistakes cost more.</p>
+<h2>What we'd build</h2>
+<p>Each player gets a report card with:</p>
+<ul>
+<li><strong>An overall score</strong> (for example 71): the predicted contribution next season</li>
+<li><strong>A confidence range</strong> (for example 58 to 80): less data means a wider range</li>
+<li><strong>A value view:</strong> if two players would help equally and one costs half as much, he's the better buy. That's the Moneyball logic for a capped budget</li>
+</ul>
+<p>The score uses four inputs. <strong>Direct measures:</strong> playing time, speed and size. <strong>Proxies, each with a check:</strong></p>
+<ul>
+<li><strong>Past performance</strong>, adjusted for opponent strength. A receiver's big numbers might really belong to his quarterback or a weak schedule</li>
+<li><strong>Role fit</strong>, scored by two raters who have to agree</li>
+</ul>
+<p>Data comes from game stats, verified testing, film and disclosed pay deals. <strong>Injury history is never scored.</strong> It only triggers a medical review.</p>
+<h2>How we'd prove it works</h2>
+<p>Four tests, each tied to one of the suspicions:</p>
+<ol>
+<li><strong>Noise:</strong> two analysts rate the same 50 players. Do they agree?</li>
+<li><strong>Bias:</strong> coaches rate profiles with the school name hidden, then shown. If ratings jump for a big name, that's bias</li>
+<li><strong>History check:</strong> score three years of past transfers. Does the model beat star ratings and a simple checklist?</li>
+<li><strong>Live trial:</strong> coaches rank players before seeing scores, and after the season we see who was right</li>
+</ol>
+<p><strong>The two kinds of error don't cost the same.</strong> A false positive means signing a player who doesn't help, on a scholarship that can't be taken back. A false negative means passing on a future star who then helps a rival.</p>
+<p><strong>Stop rules set in advance:</strong></p>
+<ul>
+<li>If analysts can't agree on role fit, we revise the inputs</li>
+<li>If it only works for some positions, we limit it to those</li>
+<li>If it can't beat star ratings, or it's unfair to small schools, we reject it</li>
+<li>If a simple checklist works as well, we use the checklist</li>
+</ul>
+<h2>Using it responsibly</h2>
+<ul>
+<li><strong>Coaches decide; the algorithm advises.</strong> Position coaches judge character and fit, compliance confirms pay is fair market value, and the head coach makes every final call</li>
+<li><strong>The biggest risk is underpaying players because of flawed data.</strong> So injury history never lowers a score, a player without a score gets human review rather than an automatic no, and the model never sets a maximum offer</li>
+<li><strong>Accuracy is checked separately</strong> for small and large schools</li>
+<li><strong>Players can correct the facts</strong> behind their rating</li>
+</ul>
+<figure><a href="images/report-card.png"><img src="images/report-card.png" alt="The report card" width="2200" height="1238" decoding="async"></a><figcaption>The report card</figcaption></figure>
+<figure><a href="images/four-tests-and-stop-rules.png"><img src="images/four-tests-and-stop-rules.png" alt="Four tests and stop rules" width="2200" height="1238" decoding="async"></a><figcaption>Four tests and stop rules</figcaption></figure>
+<h2>My individual work in this course</h2>
+<p>Three short pieces that fed into the team project:</p>
+<ul>
+<li><strong>Moneyball analysis.</strong> What problem Billy Beane was really solving (pricing, not scouting), which scout knowledge was legitimate and which was "appearance dressed up as expertise", and why better data wasn't enough. The lesson I took: the analysis was right and sitting in the building, but it changed nothing until the person holding the lineup card was convinced. I applied it to hiring: grade interviewers on how their picks actually perform, the way you'd grade scouts</li>
+<li><strong>Noise vs. bias.</strong> Bias leans one way and shows up in averages. Noise is scatter, and it hides because each case lands on one desk. In Kahneman's audits, executives expected 5% to 10% disagreement and found 48% to 60%. I designed a structured internal-promotion process: criteria written before the role is posted, independent scoring by three raters, a noise audit as a baseline, and the evidence I'd need before trusting it, since <strong>a consistent tool can still be consistently wrong</strong></li>
+<li><strong>Decision opportunities.</strong> Three candidates for human-AI collaboration: client credit terms at a family logistics company, squad selection in competitive sport, and food planning at a soup kitchen. The second became our team project. For credit terms, I argued AI helps most with <em>representation</em>: seeing clients through shipment volumes and payment timing rather than a name, a revenue figure and a gut feeling</li>
+</ul>
+<h2>What I took from it</h2>
+<p>The most useful part of this project wasn't the scoring model. It was deciding in advance what evidence would make us drop it. A tool like this can easily become a way to justify decisions coaches have already made. Writing the stop rules first, and committing to a plain checklist if it did just as well, kept the focus on whether it actually improves decisions.</p>
+<h2>Files</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Folder</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="report/Transfer_Portal_Pitch_Team6.pdf"><code>report/Transfer_Portal_Pitch_Team6.pdf</code></a></td>
+<td>Pitch deck</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/transfer-portal-human-ai/report/individual"><code>report/individual/</code></a></td>
+<td>My Moneyball, Noise vs. Bias and Decision Opportunities write-ups</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/transfer-portal-human-ai/images"><code>images/</code></a></td>
+<td>Slides used in this write-up</td>
+</tr>
+</tbody>
+</table></div>
+  </article>
+
+  <div class="wrap"><nav class="pager" aria-label="More projects"><a class="prev" href="../bike-share-tableau/"><span>Previous project</span>Bike share insights</a><a class="next" href="../markstrat-ai-autopilot/"><span>Next project</span>Markstrat on AI autopilot</a></nav></div>
+
+  <section class="contact">
+    <div class="wrap">
+      <h2>Want to talk through this project?</h2>
+      <p>I'm looking for summer 2027 internships and full-time roles from August 2027 in consulting, strategy, analytics and finance.</p>
+      <div class="links">
+        <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
+        <a href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
+</footer>
+
+</body>
+</html>
