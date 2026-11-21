@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pay Equity at BSR: Equal Pay Stops at Director | Pedro Sánchez Rosillo</title>
+<meta name="description" content="Pay is equal for four in five employees, and 85 Directors make up 95% of the gap, which held at 27.1% across 30 robustness models. We took it to leadership as a memo and deck, then as a five-dashboard Tableau story.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pay Equity at BSR: Equal Pay Stops at Director">
+<meta property="og:description" content="Pay is equal for four in five employees, and 85 Directors make up 95% of the gap, which held at 27.1% across 30 robustness models. We took it to leadership as a memo and deck, then as a five-dashboard Tableau story.">
+<meta property="og:url" content="https://pedrosrsanto.github.io/msba-portfolio/projects/bsr-pay-equity/">
+<meta property="og:image" content="https://pedrosrsanto.github.io/msba-portfolio/projects/bsr-pay-equity/images/directors-make-95-percent-of-gap.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231C2433'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23F3F5F8' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="../../">Pedro Sánchez Rosillo</a>
+  <nav aria-label="Main">
+    <a href="../../#projects">All projects</a>
+    <a href="../../#experience">Experience</a>
+    <a href="../../#contact">Contact</a>
+    <a class="nav-cv" href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap case-head">
+    <p class="crumb"><a href="../../#projects">Projects</a> / Pay equity at BSR</p>
+    <h1>Pay Equity at BSR: Equal Pay Stops at Director</h1>
+    
+    <dl class="meta">
+<div><dt>Courses</dt><dd>MGMT 6600 Using Data to Lead Change (Dr. Eliot Sherman) and OPAN 6600 Visualization &amp; Storytelling with Data, Georgetown MSBA (Fall 2026)</dd></div>
+<div><dt>Team 6</dt><dd>Siho Lee, Finley Mynott, Riya Pradhan, Pedro Sanchez, Kate Smith</dd></div>
+<div><dt>Tools</dt><dd>Tableau (five-dashboard story with filter actions and parameters), regression analysis, executive memo, slide deck</dd></div>
+<div><dt>Data</dt><dd>BSR workforce file, 1,500 employees</dd></div>
+    </dl>
+    <p class="actions"><a class="btn" href="report/BSR_Leadership_Presentation_MGMT6600.pdf">See the deck (PDF)</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/bsr-pay-equity">Project folder on GitHub</a></p>
+  </div>
+
+  <article class="wrap case-body">
+<h2>The headline</h2>
+<p><strong>By the measure most pay reviews use, BSR has no gender pay gap: median pay is +0.4% in women's favor. At the mean, women earn $15,446 less, a 17.2% gap.</strong> Both are correct. Pay is equal for four in five employees, and the gap sits almost entirely with 85 Directors.</p>
+<p>The bigger risk is coming: <strong>two in three of BSR's best junior women say they don't intend to stay.</strong> They're the pipeline that would close the gap.</p>
+<p>We took this to BSR's leadership twice: as an executive memo and deck (MGMT 6600), and as an interactive Tableau story (OPAN 6600).</p>
+<hr />
+<h2>Part 1: The case for leadership (MGMT 6600)</h2>
+<h3>Where the gap lives</h3>
+<figure><a href="images/gap-by-payroll-percentile.png"><img src="images/gap-by-payroll-percentile.png" alt="Gap by payroll percentile" width="1467" height="825" decoding="async"></a><figcaption>Gap by payroll percentile</figcaption></figure>
+<p>Below the 80th percentile of the payroll there's no gap: women's and men's pay never differ by more than 3%. The top fifth is where it opens, reaching -51% at the 95th percentile.</p>
+<figure><a href="images/pay-by-level.png"><img src="images/pay-by-level.png" alt="Pay by level" width="1467" height="825" decoding="async"></a><figcaption>Pay by level</figcaption></figure>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>People</th>
+<th>Women vs. men</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Junior</td>
+<td>1,196 (50% women)</td>
+<td><strong>+1.5%</strong></td>
+</tr>
+<tr>
+<td>Manager</td>
+<td>219 (48% women)</td>
+<td><strong>-10.5%</strong></td>
+</tr>
+<tr>
+<td>Director</td>
+<td>85 (36% women)</td>
+<td><strong>-25.7%</strong></td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="images/directors-make-95-percent-of-gap.png"><img src="images/directors-make-95-percent-of-gap.png" alt="Directors make 95% of the gap" width="1467" height="825" decoding="async"></a><figcaption>Directors make 95% of the gap</figcaption></figure>
+<p><strong>85 Directors, 5.7% of the workforce, account for 95% of the company-wide gap.</strong> It's a Director problem, not a company-wide one.</p>
+<h3>Why it happens: discretion and segregation</h3>
+<ul>
+<li><strong>Ratings stop paying above Junior.</strong> A Junior rated 5 earns 27% more than one rated 3. At Manager the return is 0%, and at Director it's -1%. Above Junior, pay follows managerial discretion rather than merit</li>
+<li><strong>Women Directors are rated higher (4.13 vs. 3.98) but paid less.</strong> 71% of women Directors are paid below what BSR's own pay pattern predicts for their job, against 30% of men</li>
+<li><strong>The best-paid Director jobs are where women aren't.</strong> Only 3 of 30 Accounting and Finance Directors are women. At men's promotion rates BSR would have 52 women Directors, not 31</li>
+<li><strong>BSR builds the gap, it doesn't hire it.</strong> Entry pay is equal for six years of tenure. After that the gap opens to around -20%</li>
+</ul>
+<figure><a href="images/gap-opens-after-year-six.png"><img src="images/gap-opens-after-year-six.png" alt="Gap opens after year six" width="1467" height="825" decoding="async"></a><figcaption>Gap opens after year six</figcaption></figure>
+<p>Across 30 robustness models controlling for tenure, location, department, performance, race and parental status, <strong>the unexplained Director gap held at 27.1%.</strong></p>
+<h3>The pipeline risk</h3>
+<figure><a href="images/top-junior-women-leaving.png"><img src="images/top-junior-women-leaving.png" alt="Top junior women leaving" width="1467" height="825" decoding="async"></a><figcaption>Top junior women leaving</figcaption></figure>
+<p>Among junior staff rated 4 or 5, <strong>68% of women report low intention to stay, against 31% of men.</strong> Left alone, the junior female bench drops from 50% to under a third, which locks in today's Director gap for a decade and creates about <strong>$5.55M in turnover cost</strong>.</p>
+<h3>Two moves we recommended</h3>
+<ol>
+<li><strong>Close the discretion gap in pay and promotion</strong> (about $4.61M, 3.75% of payroll). Published salary bands for Manager and Director roles, executive sign-off for any out-of-band offer, an annual pay audit against regression models, women on every Director shortlist, and rotation paths into Finance</li>
+<li><strong>Calibrate ratings and retain high performers now</strong> (no immediate payroll cost). HR reviews rating spreads by gender before sign-off and flags any manager above 1.5x variance. Skip-level stay conversations with the 200 high-potential junior women within 30 days</li>
+</ol>
+<hr />
+<h2>Part 2: The Tableau story (Visualization &amp; Storytelling with Data)</h2>
+<p>We rebuilt the analysis as five Tableau dashboards, one per presenter, each answering the question the last one raised.</p>
+<ol>
+<li><strong>The puzzle.</strong> Median salary by gender ($57,070 vs. $56,853) next to the mean ($74,098 vs. $89,544), plus a headcount-by-level chart showing four in five employees are Junior</li>
+<li><strong>Junior vs. Director</strong> <em>(my dashboard)</em>. Average pay by level and gender, plus a box plot with a level selector parameter</li>
+<li><strong>Ratings.</strong> Pay by performance rating, one line per level, showing that pay follows ratings at Junior and nothing above</li>
+<li><strong>Job families.</strong> A bubble chart of Director pay against the share of women in each family, with a filter action that drills into one family</li>
+<li><strong>Analytical reflections.</strong> Junior leave intention by rating and gender, plus the three recommended actions</li>
+</ol>
+<h3>My dashboard: Junior vs. Director</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Women (avg)</th>
+<th>Men (avg)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Junior</td>
+<td>$53,371</td>
+<td>$52,547</td>
+</tr>
+<tr>
+<td>Manager</td>
+<td>$132,513</td>
+<td>$148,464</td>
+</tr>
+<tr>
+<td>Director</td>
+<td>$278,081</td>
+<td>$372,806</td>
+</tr>
+</tbody>
+</table></div>
+<p>The box plot makes the gap visible. At Junior, women's and men's pay boxes sit on top of each other. At Director they don't touch: the top of the women's box is $317,648 and the bottom of the men's is $344,736. <strong>Three quarters of women Directors earn less than three quarters of men Directors.</strong> With only 31 women Directors, I presented it as a strong signal to investigate rather than proof of the cause.</p>
+<p><em>The memo and the Tableau story were built separately, so a few figures differ slightly. For example, the average Director gap is $94,059 in the memo and $94,725 in the dashboards.</em></p>
+<h2>Being honest about the limits</h2>
+<ul>
+<li>We compared broad levels, not identical jobs, and had base pay only (no bonus or equity)</li>
+<li>31 women Directors is a small group, though the gap is large at both the median and the mean</li>
+<li>What would change our minds: bonus, equity or job-content data showing that role differences explain the Director gap</li>
+</ul>
+<h2>Files</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="report/BSR_Leadership_Presentation_MGMT6600.pdf"><code>report/BSR_Leadership_Presentation_MGMT6600.pdf</code></a></td>
+<td>16-slide leadership deck</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/bsr-pay-equity/images"><code>images/</code></a></td>
+<td>Slides used in this write-up</td>
+</tr>
+</tbody>
+</table></div>
+  </article>
+
+  <div class="wrap"><nav class="pager" aria-label="More projects"><a class="prev" href="../linkedin-usage-predictor/"><span>Previous project</span>LinkedIn usage predictor</a><a class="next" href="../toyota-corolla-pricing/"><span>Next project</span>Used Corolla resale pricing</a></nav></div>
+
+  <section class="contact">
+    <div class="wrap">
+      <h2>Want to talk through this project?</h2>
+      <p>I'm looking for summer 2027 internships and full-time roles from August 2027 in consulting, strategy, analytics and finance.</p>
+      <div class="links">
+        <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
+        <a href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
+</footer>
+
+</body>
+</html>
