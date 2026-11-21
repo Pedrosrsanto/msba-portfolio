@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>R Programming: Which eBay Categories Should a Reseller Focus On? | Pedro Sánchez Rosillo</title>
+<meta name="description" content="Base R and dplyr analysis of 1,223 auctions for a reseller.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R Programming: Which eBay Categories Should a Reseller Focus On?">
+<meta property="og:description" content="Base R and dplyr analysis of 1,223 auctions for a reseller.">
+<meta property="og:url" content="https://pedrosrsanto.github.io/msba-portfolio/projects/r-programming-fundamentals/">
+<meta property="og:image" content="https://pedrosrsanto.github.io/msba-portfolio/projects/bsr-pay-equity/images/pay-by-level.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231C2433'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23F3F5F8' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="../../">Pedro Sánchez Rosillo</a>
+  <nav aria-label="Main">
+    <a href="../../#projects">All projects</a>
+    <a href="../../#experience">Experience</a>
+    <a href="../../#contact">Contact</a>
+    <a class="nav-cv" href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap case-head">
+    <p class="crumb"><a href="../../#projects">Projects</a> / R: eBay categories</p>
+    <h1>R Programming: Which eBay Categories Should a Reseller Focus On?</h1>
+    
+    <dl class="meta">
+<div><dt>Course</dt><dd>OPAN 6606 Programming I: Intro to Data, Georgetown MSBA (Fall 2026)</dd></div>
+<div><dt>Tools</dt><dd>R (base R, tidyverse/dplyr)</dd></div>
+<div><dt>Skills</dt><dd>Vectors and indexing, loops and functions, <code>select()</code>, <code>mutate()</code> with <code>case_when()</code>, <code>summarize()</code> with <code>.by</code>, writing the same logic in base R and in dplyr</dd></div>
+    </dl>
+    <p class="actions"><a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/r-programming-fundamentals/code">View the code</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/r-programming-fundamentals">Project folder on GitHub</a></p>
+  </div>
+
+  <article class="wrap case-body">
+<h2>The question</h2>
+<p>A reseller is deciding which product categories to focus their online storefront on, and handed over <strong>1,223 historical eBay auctions</strong> to mine for patterns before committing. The project builds across three classes: base R fundamentals, then loops and functions, then dplyr.</p>
+<h2>What I found</h2>
+<ul>
+<li><strong>Auction length:</strong> the longest auctions ran 10 days (220 of them). The average was about 6.4 days, and 59% of auctions ran longer than that. Bucketed: 722 long (7 to 10 days), 330 medium (5 days), 171 short (1 to 3 days)</li>
+<li><strong>Close-to-open price ratio:</strong> the raw average was about 119.6, which is misleading. A handful of auctions opened at $0.01, which blows up the ratio. Excluding those, the average is about <strong>9.6</strong>. For Computer auctions it's about 21.8</li>
+<li><strong>Highest average close price by category:</strong> Electronics, then Automotive, then Pottery/Glass</li>
+<li><strong>Timing matters:</strong> Computer auctions ending on a <strong>Saturday</strong> averaged a <strong>$103.62</strong> close, well above even the best category average (Electronics, $80.70)</li>
+</ul>
+<h2>Recommendation</h2>
+<p><strong>Prioritize Automotive.</strong> It has the second-best average close price ($55.19) and a high auction count, so it produces the highest total close value of any category. For Computers, aim for auctions that end on a Saturday, assuming the seller can control when an auction ends.</p>
+<h2>How it's built</h2>
+<p>The same summary is written two ways, to show the logic both in base R and in the tidyverse:</p>
+<pre><code class="language-r"># Base R: average close price and count of auctions closing above the open price
+category_summary &lt;- function(df, category_name) {
+  rows &lt;- df$Category == category_name
+  avgClose &lt;- mean(df$ClosePrice[rows])
+  countAbove1 &lt;- sum(rows[df$Ratio &gt; 1])
+  cat(&quot;avgClose&quot;, avgClose, &quot;\n countAbove1&quot;, countAbove1)
+}
+
+# dplyr version of the same function
+category_summary_tidy &lt;- function(df, category_name) {
+  result &lt;- filter(df, Category == category_name) |&gt;
+    summarize(avgClose = mean(ClosePrice),
+              countAbove1 = sum(Ratio &gt; 1))
+  cat(&quot;avgClose&quot;, result$avgClose, &quot;\n countAbove1&quot;, result$countAbove1)
+}
+</code></pre>
+<p>Both versions were tested on the Computer and Books categories and return the same numbers.</p>
+<p>I set myself one rule for this course: only use functions covered in class. It would have been faster to pull in extra packages, but the point of a first programming course is to understand what the code is doing.</p>
+<h2>Also in this course</h2>
+<p>The R and Quarto work in this course built up to the <strong><a href="../airbnb-dc-pricing/">Airbnb DC pricing project</a></strong>, the joint final project with Stats for Business Analytics.</p>
+<h2>Files</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/blob/main/projects/r-programming-fundamentals/code/project1_ebay_auctions.R"><code>code/project1_ebay_auctions.R</code></a></td>
+<td>Full R script for Project 1</td>
+</tr>
+</tbody>
+</table></div>
+  </article>
+
+  <div class="wrap"><nav class="pager" aria-label="More projects"><a class="prev" href="../faker-synthetic-data/"><span>Previous project</span>Faker for synthetic data</a><a class="next" href="../../#projects"><span>Back to</span>All projects</a></nav></div>
+
+  <section class="contact">
+    <div class="wrap">
+      <h2>Want to talk through this project?</h2>
+      <p>I'm looking for summer 2027 internships and full-time roles from August 2027 in consulting, strategy, analytics and finance.</p>
+      <div class="links">
+        <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
+        <a href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
+</footer>
+
+</body>
+</html>
