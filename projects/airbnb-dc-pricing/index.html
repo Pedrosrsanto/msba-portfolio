@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Drives Airbnb Prices in Washington, DC | Pedro Sánchez Rosillo</title>
+<meta name="description" content="Size, then location. Each extra bedroom is worth about $48 a night holding location fixed, and Downtown or Georgetown adds $60 to $90. Superhost status and ratings add nothing once size and location are in the model.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What Drives Airbnb Prices in Washington, DC">
+<meta property="og:description" content="Size, then location. Each extra bedroom is worth about $48 a night holding location fixed, and Downtown or Georgetown adds $60 to $90. Superhost status and ratings add nothing once size and location are in the model.">
+<meta property="og:url" content="https://pedrosrsanto.github.io/msba-portfolio/projects/airbnb-dc-pricing/">
+<meta property="og:image" content="https://pedrosrsanto.github.io/msba-portfolio/projects/airbnb-dc-pricing/images/price-by-neighborhood.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231C2433'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23F3F5F8' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="../../">Pedro Sánchez Rosillo</a>
+  <nav aria-label="Main">
+    <a href="../../#projects">All projects</a>
+    <a href="../../#experience">Experience</a>
+    <a href="../../#contact">Contact</a>
+    <a class="nav-cv" href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap case-head">
+    <p class="crumb"><a href="../../#projects">Projects</a> / Airbnb pricing in DC</p>
+    <h1>What Drives Airbnb Prices in Washington, DC</h1>
+    
+    <dl class="meta">
+<div><dt>Courses</dt><dd>OPAN 6601 Stats for Business Analytics and OPAN 6606 Programming I: Intro to Data, Georgetown MSBA (Fall 2026)</dd></div>
+<div><dt>Group 6</dt><dd>Kate Smith, Finley Mynott, Pedro Sanchez, Riya Pradhan, Siho Lee</dd></div>
+<div><dt>Tools</dt><dd>R (base R, dplyr), Quarto</dd></div>
+<div><dt>Methods</dt><dd>Data joins and cleaning, confidence intervals, hypothesis testing, simple and multiple linear regression, residual diagnostics, multicollinearity</dd></div>
+    </dl>
+    <p class="actions"><a class="btn" href="report/Airbnb_DC_Final_Report_Group6.pdf">Read the report (PDF)</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/airbnb-dc-pricing/code">View the code</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/airbnb-dc-pricing">Project folder on GitHub</a></p>
+  </div>
+
+  <article class="wrap case-body">
+<h2>The headline</h2>
+<p><strong>Size is by far the strongest driver of a DC Airbnb's nightly price. Each extra bedroom is worth about $48 a night, holding location and room type constant.</strong> Location adds its own premium on top: Downtown or Georgetown is worth roughly $60 to $90 a night more. Superhost status and guest ratings show no consistent link to price once size and location are accounted for.</p>
+<p><strong>Recommendation for an investor:</strong> prioritize larger units (3+ bedrooms) in Downtown, Georgetown or Capitol Hill rather than chasing Superhost status. Those areas also have the widest spread of outcomes, so more upside comes with more variability.</p>
+<h2>Data and cleaning</h2>
+<p>Two files: <code>Listings.csv</code> (1,931 listings) and <code>Reviews.csv</code> (2,360 rows), stored under different key names (<code>id</code> and <code>listing_id</code>).</p>
+<ul>
+<li><strong>Joining.</strong> An inner join and a left join both returned 1,931 rows, so each listing has one review record and the 429 extra review rows matched nothing. We dropped them</li>
+<li><strong>Missing values.</strong> Found in <code>beds</code> (2), <code>avg_rating</code> (63) and <code>room_type</code> (40). The last ones were blank strings, which <code>is.na()</code> doesn't flag because they're coded as <code>""</code> rather than <code>NA</code></li>
+<li><strong>Outliers.</strong> The top price was $50,000 against a median of $146. A |z| &gt; 3 rule flagged two listings, both in Kalorama Heights, both $50,000, both from the same host. We treated them as placeholder prices and removed them. The next-highest price ($1,321) belonged to genuinely large homes, which we kept</li>
+<li><strong>Feature work.</strong> Parsed free-text bathrooms ("2 shared baths") into a numeric count and a shared/private flag, converted <code>host_since</code> to a date, and set the reference levels to the most common values ("Entire home/apt", "Union Station") so coefficients read against a typical listing</li>
+</ul>
+<p><strong>Final dataset: 1,828 listings, no missing values.</strong></p>
+<h2>What the data shows</h2>
+<figure><a href="images/price-by-neighborhood.png"><img src="images/price-by-neighborhood.png" alt="Price by neighborhood" width="1344" height="960" decoding="async"></a><figcaption>Price by neighborhood</figcaption></figure>
+<ul>
+<li><strong>Average nightly price: $168.03</strong> (95% CI $163.77 to $172.30), from our own t-based confidence interval function</li>
+<li><strong>Is the average above $200?</strong> No. t = -14.70, so we fail to reject. The whole confidence interval sits below $200</li>
+<li><strong>Is price normal?</strong> No. It's strongly right-skewed: 81.8% of prices fall within one SD (vs. 68.3% expected) and only 98.2% within three (vs. 99.7%). With n = 1,828 the CLT still supports the t-based inference on the mean</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Neighborhood and room type</th>
+<th>Avg. price</th>
+<th>SD</th>
+<th>n</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Highest average: Downtown, entire home</td>
+<td>$280.56</td>
+<td>$108.73</td>
+<td>62</td>
+</tr>
+<tr>
+<td>Lowest average: Capitol Hill, shared room</td>
+<td>$54.33</td>
+<td>$28.82</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Most variable: Georgetown, entire home</td>
+<td>$244.90</td>
+<td>$179.93</td>
+<td>71</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Modeling price</h2>
+<figure><a href="images/price-vs-bedrooms.png"><img src="images/price-vs-bedrooms.png" alt="Price vs bedrooms" width="1344" height="960" decoding="async"></a><figcaption>Price vs bedrooms</figcaption></figure>
+<p><strong>Best single predictor:</strong> bedrooms (R-squared 0.324, residual SE $76.50), then accommodates (0.289) and bath count (0.260). Host and review variables explain almost nothing on their own: Superhost status has an R-squared of 0.001.</p>
+<p><strong>Multiple regression</strong> on size, room type, neighborhood and host/review variables:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Simple (bedrooms)</th>
+<th>Multiple regression</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-squared</td>
+<td>0.324</td>
+<td><strong>0.505</strong> (adj. 0.500)</td>
+</tr>
+<tr>
+<td>Residual SE</td>
+<td>$76.50</td>
+<td><strong>$65.77</strong></td>
+</tr>
+<tr>
+<td>Each extra bedroom</td>
+<td>+$65.61</td>
+<td><strong>+$47.86</strong></td>
+</tr>
+<tr>
+<td>Each extra guest capacity</td>
+<td>+$27.63 (alone)</td>
+<td>+$8.78</td>
+</tr>
+</tbody>
+</table></div>
+<p>Key coefficients against Union Station and an entire home:</p>
+<ul>
+<li><strong>Downtown +$86.69, Georgetown +$63.51</strong>, Foggy Bottom +$33.92, Capitol Hill and Dupont Circle about +$26.75</li>
+<li><strong>Edgewood -$34.04, Columbia Heights -$31.59</strong></li>
+<li><strong>Shared room -$116.70, private room -$31.64</strong></li>
+<li><strong>Superhost (p = 0.081) and average rating (p = 0.96): not significant</strong></li>
+</ul>
+<p>The location premium is smaller than the raw neighborhood averages suggest, because bigger units are concentrated in the expensive areas. That inflates the apparent value of location until size is controlled for.</p>
+<h2>Checking our own work</h2>
+<ul>
+<li><strong>Assumptions.</strong> Residuals fan out as fitted price rises, and the Q-Q plot bends away in the upper tail. The coefficients stay unbiased, but the standard errors and p-values aren't fully trustworthy. A log transformation of price is the usual fix, and we flagged it</li>
+<li><strong>Multicollinearity.</strong> Accommodates and bedrooms correlate at r = 0.74. Adding bedrooms cut the accommodates coefficient by two-thirds ($27.63 to $8.78), while bedrooms stayed stable ($65.61 to $47.86). Neither flipped sign, so we kept both, with bedrooms as the stronger driver</li>
+<li><strong>Variable choices.</strong> Dropped <code>beds</code> (the weakest size measure, and overlapping with the others) and <code>host_total_listings</code> (dominated by a few hosts with thousands of listings)</li>
+</ul>
+<h2>Files</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="report/Airbnb_DC_Final_Report_Group6.pdf"><code>report/Airbnb_DC_Final_Report_Group6.pdf</code></a></td>
+<td>Full report with figures</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/blob/main/projects/airbnb-dc-pricing/code/FinalProject_Group6.qmd"><code>code/FinalProject_Group6.qmd</code></a></td>
+<td>Quarto source (R code and narrative)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/airbnb-dc-pricing/images"><code>images/</code></a></td>
+<td>Charts used in this write-up</td>
+</tr>
+</tbody>
+</table></div>
+  </article>
+
+  <div class="wrap"><nav class="pager" aria-label="More projects"><a class="prev" href="../toyota-corolla-pricing/"><span>Previous project</span>Used Corolla resale pricing</a><a class="next" href="../cab-booking-cancellations/"><span>Next project</span>Cab booking cancellations</a></nav></div>
+
+  <section class="contact">
+    <div class="wrap">
+      <h2>Want to talk through this project?</h2>
+      <p>I'm looking for summer 2027 internships and full-time roles from August 2027 in consulting, strategy, analytics and finance.</p>
+      <div class="links">
+        <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
+        <a href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
+</footer>
+
+</body>
+</html>
