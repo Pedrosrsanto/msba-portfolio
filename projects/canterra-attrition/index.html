@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keeping Canterra&#x27;s Talent: Predicting and Explaining Employee Attrition | Pedro Sánchez Rosillo</title>
+<meta name="description" content="Duplicated HR records made our models look 99% accurate when they caught only 13% of leavers on new employees.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Keeping Canterra&#x27;s Talent: Predicting and Explaining Employee Attrition">
+<meta property="og:description" content="Duplicated HR records made our models look 99% accurate when they caught only 13% of leavers on new employees.">
+<meta property="og:url" content="https://pedrosrsanto.github.io/msba-portfolio/projects/canterra-attrition/">
+<meta property="og:image" content="https://pedrosrsanto.github.io/msba-portfolio/projects/canterra-attrition/images/aml-roc-and-gains.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231C2433'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%23F3F5F8' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="../../">Pedro Sánchez Rosillo</a>
+  <nav aria-label="Main">
+    <a href="../../#projects">All projects</a>
+    <a href="../../#experience">Experience</a>
+    <a href="../../#contact">Contact</a>
+    <a class="nav-cv" href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Resume</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap case-head">
+    <p class="crumb"><a href="../../#projects">Projects</a> / Employee attrition at Canterra</p>
+    <h1>Keeping Canterra&#x27;s Talent: Predicting and Explaining Employee Attrition</h1>
+    
+    <dl class="meta">
+<div><dt>Part 1</dt><dd>OPAN 6602 Machine Learning Foundations, Georgetown MSBA (Fall 2026). Team 6: Finley Mynott, Siho Lee, Riya Pradhan, Pedro Sanchez, Kate Smith</dd></div>
+<div><dt>Part 2</dt><dd>OPAN 6603 Advanced Machine Learning &amp; AI, Georgetown MSBA (Fall 2026). Pedro Sanchez and Anton van der Laar</dd></div>
+<div><dt>Tools</dt><dd>Python (pandas, statsmodels, scikit-learn, matplotlib)</dd></div>
+<div><dt>Methods</dt><dd>Logistic regression, decision trees, KNN, Random Forest, neural networks (MLP), repeated cross-validation, permutation importance, bootstrap scenario analysis</dd></div>
+    </dl>
+    <p class="actions"><a class="btn" href="report/Canterra_Attrition_Report_Team6.pdf">Part 1 report (PDF)</a> <a class="btn" href="report/Canterra_Attrition_RF_vs_NN_Report.pdf">Part 2 report (PDF)</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/canterra-attrition/code">View the code</a> <a class="btn btn-ghost" href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/canterra-attrition">Project folder on GitHub</a></p>
+  </div>
+
+  <article class="wrap case-body">
+<h2>The headline</h2>
+<p>Canterra replaces about 600 of its 4,000 employees every year. We worked on the problem twice, in two courses:</p>
+<ul>
+<li><strong>Part 1 (explain it):</strong> four workplace levers could cut attrition from 16% to about 9%, preventing roughly <strong>283 departures and saving about $3.9M a year</strong>. The biggest levers are a poor work environment and frequent travel, not pay.</li>
+<li><strong>Part 2 (predict it):</strong> a tuned Random Forest puts <strong>41% of all leavers into the riskiest 20% of employees</strong>, twice what a random list would catch. The more important finding was a data problem: duplicated records had made the models look <strong>99% accurate</strong> when they really weren't.</li>
+</ul>
+<h2>The data problem we caught first</h2>
+<p>The HR file had 4,410 records, but <strong>every employee appeared three times</strong> under three different IDs, identical down to income and outcome. With a random split, 91% of test records would have had a copy in the training data, so the models would just be recalling answers they had already seen.</p>
+<figure><a href="images/repeated-records-inflate-auc.png"><img src="images/repeated-records-inflate-auc.png" alt="Repeated records inflate results" width="979" height="460" decoding="async"></a><figcaption>Repeated records inflate results</figcaption></figure>
+<p>Left in, a default Random Forest scored <strong>99.2% accuracy and caught 95% of leavers</strong>. On employees it had never seen, the same model caught <strong>13%</strong>. The repeats flattered the most flexible models most, and even reversed the ranking: the large neural network looked best with the duplicates and was the weakest model without them.</p>
+<p>We kept one row per employee (1,470 employees, 237 leavers) and filled all 73 missing values from each person's copies, so nothing had to be estimated.</p>
+<hr />
+<h2>Part 1: What drives people out (Machine Learning Foundations)</h2>
+<p>Our team compared a <strong>logistic regression</strong>, a <strong>decision tree</strong> and a <strong>KNN benchmark</strong>, trained on 70% of employees and tested once on the other 30%. Since only 16% leave, the default 50% cutoff caught just 14% of leavers, so we set each model's cutoff on the training data to favor catching leavers.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>CV AUC</th>
+<th>Test AUC</th>
+<th>Leavers caught</th>
+<th>Flags that were right</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Logistic regression</strong></td>
+<td><strong>0.74</strong></td>
+<td><strong>0.70</strong></td>
+<td><strong>63%</strong></td>
+<td>25%</td>
+</tr>
+<tr>
+<td>Decision tree</td>
+<td>0.64</td>
+<td>0.62</td>
+<td>45%</td>
+<td>24%</td>
+</tr>
+<tr>
+<td>KNN (benchmark)</td>
+<td>0.73</td>
+<td>0.68</td>
+<td>55%</td>
+<td>27%</td>
+</tr>
+</tbody>
+</table></div>
+<p>We recommended the logistic regression. It ranks risk best, and it states each driver's effect in plain terms, which is what management actually needed.</p>
+<figure><a href="images/attrition-by-group.png"><img src="images/attrition-by-group.png" alt="Attrition by group" width="1113" height="303" decoding="async"></a><figcaption>Attrition by group</figcaption></figure>
+<figure><a href="images/attrition-drivers.png"><img src="images/attrition-drivers.png" alt="Drivers of attrition" width="883" height="397" decoding="async"></a><figcaption>Drivers of attrition</figcaption></figure>
+<ul>
+<li><strong>Frequent travel:</strong> frequent travelers are 19 percentage points more likely to leave than non-travelers</li>
+<li><strong>Work environment:</strong> each extra satisfaction point cuts the odds of leaving by 35%</li>
+<li><strong>Job satisfaction:</strong> each extra point cuts the odds by 21%</li>
+<li><strong>Manager stability:</strong> each extra year with the same manager cuts the odds by 14%</li>
+<li><strong>Not significant:</strong> pay, job level, education, age, gender and commute distance</li>
+</ul>
+<h3>Recommendations and what they're worth</h3>
+<figure><a href="images/departures-prevented.png"><img src="images/departures-prevented.png" alt="Departures prevented" width="1075" height="450" decoding="async"></a><figcaption>Departures prevented</figcaption></figure>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Owner</th>
+<th>Departures prevented per year*</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Fix low-scoring work environments</td>
+<td>HR, Facilities</td>
+<td>132 (78 to 186)</td>
+</tr>
+<tr>
+<td>2. Cap and rotate frequent travel</td>
+<td>Department heads</td>
+<td>69 (24 to 114)</td>
+</tr>
+<tr>
+<td>3. Act on low job satisfaction</td>
+<td>Line managers</td>
+<td>67 (23 to 115)</td>
+</tr>
+<tr>
+<td>4. Keep manager assignments stable</td>
+<td>Senior leaders</td>
+<td>54 (11 to 89)</td>
+</tr>
+<tr>
+<td>5. Monthly top-10% risk list</td>
+<td>HR analytics</td>
+<td>Targets actions 1 to 4</td>
+</tr>
+</tbody>
+</table></div>
+<p>*Per 4,000 employees, 95% bootstrap range from 1,000 refits.</p>
+<hr />
+<h2>Part 2: Can HR see departures coming? (Advanced ML &amp; AI)</h2>
+<p>In Advanced ML, Anton and I came back to the same problem with two more flexible models, a <strong>Random Forest</strong> and a <strong>neural network</strong>. We asked whether they could flag leavers better, and what that costs in explainability.</p>
+<h3>Tuning</h3>
+<p>Every setting was chosen by 5-fold cross-validation repeated three times, on training employees only.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Random Forest</th>
+<th>Neural network</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Search</strong></td>
+<td>Predictors per split (1 to 17) x leaf size (1 to 20): 35 combinations, then depth, class weights and number of trees</td>
+<td>Network shape (1 to 3 layers, 4 to 32 nodes) x penalty (0.0001 to 10): 49 combinations, then activation, optimizer, learning rate and early stopping (75 more)</td>
+</tr>
+<tr>
+<td><strong>Final model</strong></td>
+<td>300 fully grown trees, 1 predictor per split, minimum leaf size 3</td>
+<td>One hidden layer of 32 nodes (ReLU), penalty 1.5, Adam</td>
+</tr>
+<tr>
+<td><strong>CV AUC</strong></td>
+<td>0.724 default, <strong>0.753 tuned</strong></td>
+<td>0.703 default, <strong>0.743 tuned</strong></td>
+</tr>
+<tr>
+<td><strong>Main lesson</strong></td>
+<td>Variety between trees mattered most. AUC fell from 0.75 to 0.71 as trees were allowed more predictors per split</td>
+<td>Restraint mattered most. Only a penalty about 15,000x the default stopped the network memorizing, and extra layers added nothing</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Results on 441 employees the models never saw</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Random Forest</th>
+<th>Neural network</th>
+<th>Logistic regression</th>
+<th>No model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test AUC</td>
+<td>0.671</td>
+<td>0.698</td>
+<td>0.696</td>
+<td>0.500</td>
+</tr>
+<tr>
+<td>Average precision</td>
+<td><strong>0.385</strong></td>
+<td>0.331</td>
+<td>0.320</td>
+<td>0.161</td>
+</tr>
+<tr>
+<td>Brier score (lower is better)</td>
+<td><strong>0.124</strong></td>
+<td>0.127</td>
+<td>0.129</td>
+<td>0.135</td>
+</tr>
+<tr>
+<td>Leavers in riskiest 10% (44 people)</td>
+<td><strong>20</strong></td>
+<td>15</td>
+<td>15</td>
+<td>about 7</td>
+</tr>
+<tr>
+<td>Leavers in riskiest 20% (88 people)</td>
+<td><strong>29 (41%)</strong></td>
+<td>28 (39%)</td>
+<td>26 (37%)</td>
+<td>about 14 (20%)</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="images/aml-roc-and-gains.png"><img src="images/aml-roc-and-gains.png" alt="ROC curves and cumulative gains" width="1254" height="517" decoding="async"></a><figcaption>ROC curves and cumulative gains</figcaption></figure>
+<p><strong>We recommended the Random Forest for a pilot, on practical grounds rather than accuracy.</strong> The 95% interval for the AUC difference runs from -0.08 to +0.02, so the test set can't separate the two models. The forest finds more leavers at the top of the list, where HR would actually act. Its probabilities had the lower error, and they were well calibrated: for the riskiest fifth it predicted 31% attrition, and 33% actually left. It also works close to its defaults, while the network quietly falls apart if the penalty is wrong (0.58 AUC at the default setting).</p>
+<p><strong>The honest caveat:</strong> neither model beat a plain logistic regression. What limits accuracy is the information in these 17 fields, not the choice of algorithm.</p>
+<h3>What each model relies on</h3>
+<figure><a href="images/what-each-model-relies-on.png"><img src="images/what-each-model-relies-on.png" alt="What each model relies on" width="869" height="715" decoding="async"></a><figcaption>What each model relies on</figcaption></figure>
+<p>We used a shuffle (permutation) test rather than the forest's built-in importance. The built-in measure ranked income and distance from home in the top five, but shuffling them didn't lower test AUC at all: that measure favors fields with many distinct values. Both models lean on the same signals:</p>
+<ul>
+<li><strong>New employees:</strong> 35% of people in their first two years left, against about 11% from year five on</li>
+<li><strong>Frequent travel:</strong> 26% left, against 15% of occasional travelers and 8% of non-travelers</li>
+<li><strong>Single employees:</strong> 27%, against 11% of married and divorced employees</li>
+<li><strong>"Low" work environment rating:</strong> 27% left; every other rating sits at 12% to 14%</li>
+<li><strong>Little predictive value:</strong> income, job level, education, gender, distance from home and training</li>
+</ul>
+<p>We also checked whether a new manager matters separately from being new. It mostly doesn't: high attrition follows short tenure at Canterra, whoever the manager is.</p>
+<h3>Recommendations (Part 2)</h3>
+<ol>
+<li><strong>Fix the HR extract first</strong> and confirm why every employee appears three times</li>
+<li><strong>Pilot the Random Forest as a ranking tool, with people in the loop.</strong> Reviewing the riskiest 20% (about 800 people) could reach about 245 of the 600 expected departures, against 120 for a random list. Two in three people on that list would have stayed anyway, so it should drive stay interviews and career conversations, never adverse decisions</li>
+<li><strong>Concentrate on the first two years:</strong> structured onboarding, a mentor, and check-ins at 6, 12 and 18 months</li>
+<li><strong>Review the load on frequent travelers</strong> and follow up "low" work environment ratings quickly</li>
+<li><strong>Decide how personal characteristics are used.</strong> A model without age, gender and marital status loses about 0.03 AUC. HR and legal should choose which version to run</li>
+<li><strong>Measure what works:</strong> run the pilot against a comparison group and keep logistic regression as a benchmark</li>
+</ol>
+<h2>Limitations we were upfront about</h2>
+<ul>
+<li>One year of data on 1,470 employees and one test split of 441, so every AUC carries a margin of about +/-0.07</li>
+<li>The patterns are associations, not causes, which is why both plans start with a controlled pilot</li>
+<li>The file doesn't separate resignations from dismissals or retirements</li>
+</ul>
+<h2>Files</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="report/Canterra_Attrition_Report_Team6.pdf"><code>report/Canterra_Attrition_Report_Team6.pdf</code></a></td>
+<td>Part 1 report for Canterra's management team</td>
+</tr>
+<tr>
+<td><a href="report/Canterra_Attrition_RF_vs_NN_Report.pdf"><code>report/Canterra_Attrition_RF_vs_NN_Report.pdf</code></a></td>
+<td>Part 2 report: Random Forest vs. neural network</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/blob/main/projects/canterra-attrition/code/advanced_ml_rf_vs_neural_network.ipynb"><code>code/advanced_ml_rf_vs_neural_network.ipynb</code></a></td>
+<td>Part 2 notebook (tuning, testing, permutation importance)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Pedrosrsanto/msba-portfolio/tree/main/projects/canterra-attrition/images"><code>images/</code></a></td>
+<td>Charts used in this write-up</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>AI use: Claude was used as a coding reference and to help prepare deliverables. All code and results were reviewed and verified by the team.</em></p>
+  </article>
+
+  <div class="wrap"><nav class="pager" aria-label="More projects"><span></span><a class="next" href="../linkedin-usage-predictor/"><span>Next project</span>LinkedIn usage predictor</a></nav></div>
+
+  <section class="contact">
+    <div class="wrap">
+      <h2>Want to talk through this project?</h2>
+      <p>I'm looking for summer 2027 internships and full-time roles from August 2027 in consulting, strategy, analytics and finance.</p>
+      <div class="links">
+        <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
+        <a href="../../Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
+</footer>
+
+</body>
+</html>
