@@ -469,7 +469,6 @@
       <div class="links">
         <a href="Pedro_Sanchez_Rosillo_Resume.pdf">Download resume</a>
         <a href="mailto:pedrosrsanto@gmail.com">Email me</a>
-        <button type="button" data-copy="pedrosrsanto@gmail.com">Copy email</button>
         <a href="https://www.linkedin.com/in/pedro-sanchez-rosillo-661316364/">LinkedIn</a>
         <a href="https://github.com/Pedrosrsanto/msba-portfolio">All projects on GitHub</a>
       </div>
@@ -481,15 +480,5 @@
   <div class="wrap">Pedro Sánchez Rosillo, 2026</div>
 </footer>
 
-<script>
-  document.querySelectorAll('[data-copy]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var label = b.textContent;
-      var done = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = label; }, 2000); };
-      if (navigator.clipboard) { navigator.clipboard.writeText(b.dataset.copy).then(done); }
-      else { var t = document.createElement('textarea'); t.value = b.dataset.copy; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done(); }
-    });
-  });
-</script>
 </body>
 </html>
