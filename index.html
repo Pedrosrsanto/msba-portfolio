@@ -64,7 +64,12 @@
     letter-spacing: -0.035em;
     font-weight: 800;
     margin: 0 0 32px;
-    max-width: 14ch;
+    max-width: 11ch;
+  }
+  .hero { position: relative; }
+  .hero-photo { display: block; width: 104px; height: 104px; object-fit: cover; border-radius: 50%; margin: 0 0 28px; }
+  @media (min-width: 1040px) {
+    .hero-photo { position: absolute; right: 28px; top: 72px; width: 300px; height: 375px; border-radius: 8px; margin: 0; }
   }
   .hero .lede {
     font-size: clamp(1.2rem, 2vw, 1.45rem);
@@ -287,8 +292,9 @@
 
 <main>
   <div class="wrap hero">
-    <h1>Business questions, answered with data.</h1>
-    <p class="lede">I'm Pedro Sánchez Rosillo, a business analytics student at Georgetown with a background in FP&amp;A and accounting. I build models, dashboards and memos that someone can actually act on.</p>
+    <img class="hero-photo" src="photo.jpg" alt="Pedro Sánchez Rosillo" width="600" height="750" onerror="this.remove()">
+    <h1>Pedro Sánchez Rosillo</h1>
+    <p class="lede">I'm doing an MS in Business Analytics at Georgetown after working in FP&amp;A and accounting. I build models, dashboards and memos that someone can actually act on, and I'm looking for summer 2027 internships and full-time roles from August 2027.</p>
     <p class="hero-cta"><a class="btn" href="Pedro_Sanchez_Rosillo_Resume.pdf">Download resume (PDF)</a> <a class="btn btn-ghost" href="#projects">See the projects</a></p>
     <dl class="facts">
       <div><dt>Studying</dt><dd>MS Business Analytics, Georgetown McDonough, May 2027</dd></div>
